@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings | AssignHub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .sidebar-gradient {
+      background: #131432;
+    }
+
+    .card-shadow {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .accent-purple {
+      color: #5D5FEF;
+    }
+
+    .bg-accent-purple {
+      background-color: #5D5FEF;
+    }
+
+    .bg-accent-purple-light {
+      background-color: rgba(93, 95, 239, 0.1);
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/petite-vue@0.4.1/dist/petite-vue.iife.js" defer init></script>
+  <script src="/api.js"></script>
+
+  <style id="safe-mobile-fixes">
+    /* 2026 Mobile Enhancements */
+    @media (max-width: 768px) {
+
+      html,
+      body {
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+      }
+
+      aside.fixed {
+        display: none !important;
+      }
+
+      main,
+      main {
+        margin-left: 0 !important;
+        padding: 16px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding-bottom: 80px !important;
+        /* Bottom nav space */
+      }
+
+      .card {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        margin-bottom: 20px !important;
+      }
+
+      table {
+        display: block !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        width: 100% !important;
+        -webkit-overflow-scrolling: touch !important;
+      }
+
+      input,
+      select,
+      textarea,
+      button,
+      .btn {
+        min-height: 48px !important;
+        font-size: 16px !important;
+      }
+
+      /* Mobile Bottom Navigation */
+      .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border-top: 1px solid #eaeaea;
+        justify-content: space-around;
+        padding: 10px 0;
+        z-index: 9999;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .mobile-bottom-nav a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #64748b;
+        text-decoration: none;
+        font-size: 12px;
+        gap: 4px;
+      }
+
+      .mobile-bottom-nav a.active {
+        color: #6366f1;
+      }
+    }
+
+    @media (min-width: 769px) {
+
+      .mobile-bottom-nav,
+      .mobile-top-bar {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="min-h-screen bg-[#F8F9FC] flex">
+    <div
+      v-scope="{...{&quot;activeItem&quot;:&quot;settings&quot;,&quot;dashboardHref&quot;:&quot;student-dashboard.html&quot;,&quot;assignmentsHref&quot;:&quot;student-assignments.html&quot;,&quot;submissionsHref&quot;:&quot;student-submissions.html&quot;,&quot;notificationsHref&quot;:&quot;student-notifications.html&quot;,&quot;settingsHref&quot;:&quot;student-settings.html&quot;,&quot;logoutHref&quot;:&quot;login.html&quot;}, $emit() {} }">
+      <aside class="w-[260px] bg-[#131432] text-white flex flex-col fixed h-full z-50">
+        <div class="p-8">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-[#5D5FEF] rounded-xl flex items-center justify-center">
+              <iconify-icon icon="lucide:graduation-cap" class="text-2xl text-white"></iconify-icon>
+            </div>
+            <span class="text-xl font-bold tracking-tight">AssignHub</span>
+          </div>
+        </div>
+        <nav class="flex-1 px-4 space-y-1">
+          <a :href="dashboardHref" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem==='dashboard'?'bg-[#5D5FEF] text-white':'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:layout-grid" class="text-xl"></iconify-icon><span
+              class="font-medium">Dashboard</span>
+          </a>
+          <a :href="assignmentsHref" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem==='assignments'?'bg-[#5D5FEF] text-white':'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:book-open" class="text-xl"></iconify-icon><span
+              class="font-medium">Assignments</span>
+          </a>
+          <a :href="submissionsHref" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem==='submissions'?'bg-[#5D5FEF] text-white':'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:send" class="text-xl"></iconify-icon><span class="font-medium">My
+              Submissions</span>
+          </a>
+          <a :href="notificationsHref" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem==='notifications'?'bg-[#5D5FEF] text-white':'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:bell" class="text-xl"></iconify-icon><span
+              class="font-medium">Notifications</span>
+          </a>
+          <a :href="settingsHref" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem==='settings'?'bg-[#5D5FEF] text-white':'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:settings" class="text-xl"></iconify-icon><span
+              class="font-medium">Settings</span>
+          </a>
+        </nav>
+        <div class="p-4 border-t border-white/10">
+          <div class="flex items-center gap-3 px-4 py-4">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Aarav" class="w-10 h-10 rounded-full bg-gray-200">
+            <div class="flex-1 overflow-hidden">
+              <p class="text-sm font-semibold truncate">Aarav Patel</p>
+              <p class="text-xs text-gray-400 truncate">Roll: 23CS105</p>
+            </div>
+          </div>
+          <a :href="logoutHref"
+            class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-red-400 transition-all">
+            <iconify-icon icon="lucide:log-out" class="text-xl"></iconify-icon><span class="font-medium">Logout</span>
+          </a>
+        </div>
+      </aside>
+    </div>
+    <main class="flex-1 ml-[260px] p-8">
+      <header class="flex items-center justify-between mb-8">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">Settings</h1>
+          <p class="text-gray-500">Manage your account details and preferences</p>
+        </div>
+        <div class="flex items-center gap-3 pl-4 border-l border-gray-200">
+          <div class="text-right">
+            <p class="text-sm font-bold text-gray-900">Aarav Patel</p>
+            <p class="text-xs text-gray-500">Roll: 23CS105</p>
+          </div>
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Aarav"
+            class="w-11 h-11 rounded-full bg-indigo-50 border border-indigo-100">
+        </div>
+      </header>
+      <div class="flex flex-col lg:flex-row gap-8">
+        <aside class="w-full lg:w-64 shrink-0">
+          <div class="bg-white rounded-3xl card-shadow border border-gray-50 p-4 space-y-1">
+            <button
+              class="w-full flex items-center gap-3 px-4 py-3 bg-indigo-50 text-[#5D5FEF] font-bold rounded-xl"><iconify-icon
+                icon="lucide:user" class="text-xl"></iconify-icon>Account</button>
+            <button
+              class="w-full flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-gray-50 rounded-xl"><iconify-icon
+                icon="lucide:shield-check" class="text-xl"></iconify-icon>Security</button>
+            <button
+              class="w-full flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-gray-50 rounded-xl"><iconify-icon
+                icon="lucide:bell" class="text-xl"></iconify-icon>Notifications</button>
+            <button
+              class="w-full flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-gray-50 rounded-xl"><iconify-icon
+                icon="lucide:monitor" class="text-xl"></iconify-icon>Appearance</button>
+          </div>
+        </aside>
+        <div class="flex-1 space-y-8">
+          <section id="section-account" class="bg-white rounded-3xl card-shadow border border-gray-50 overflow-hidden">
+            <div class="p-8 border-b border-gray-50">
+              <h3 class="text-lg font-bold text-gray-900">Public Profile</h3>
+              <p class="text-sm text-gray-500">Update your personal details visible to your teachers.</p>
+            </div>
+            <div class="p-8 space-y-8">
+              <div class="flex items-center gap-6">
+                <div class="relative group">
+                  <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Aarav"
+                    class="w-24 h-24 rounded-full border-4 border-gray-50 group-hover:opacity-80 transition-opacity">
+                  <button
+                    class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 text-white"><iconify-icon
+                      icon="lucide:camera" class="text-2xl"></iconify-icon></button>
+                </div>
+                <div>
+                  <button
+                    class="px-4 py-2 bg-[#5D5FEF] text-white text-xs font-bold rounded-lg hover:opacity-90 transition-all">Change
+                    Photo</button>
+                  <p class="text-xs text-gray-400 mt-2">JPG, GIF or PNG. Max size of 2MB.</p>
+                </div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2"><label class="text-xs font-bold text-gray-500 uppercase">Full Name</label><input
+                    id="profile-name" type="text" placeholder="Your Name"
+                    class="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-[#5D5FEF] focus:outline-none text-sm font-medium">
+                </div>
+                <div class="space-y-2"><label class="text-xs font-bold text-gray-500 uppercase">Roll
+                    Number</label><input id="profile-roll" type="text" readonly
+                    class="w-full px-4 py-3 bg-gray-100 rounded-xl border border-gray-200 text-sm font-medium text-gray-400 cursor-not-allowed">
+                </div>
+                <div class="space-y-2"><label class="text-xs font-bold text-gray-500 uppercase">Email
+                    Address</label><input id="profile-email" type="email" placeholder="Your Email"
+                    class="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-[#5D5FEF] focus:outline-none text-sm font-medium">
+                </div>
+                <div class="space-y-2"><label class="text-xs font-bold text-gray-500 uppercase">Department</label><input
+                    id="profile-dept" type="text" readonly
+                    class="w-full px-4 py-3 bg-gray-100 rounded-xl border border-gray-200 text-sm font-medium text-gray-400 cursor-not-allowed">
+                </div>
+                <div class="md:col-span-2 space-y-2"><label
+                    class="text-xs font-bold text-gray-500 uppercase">Bio</label><textarea id="profile-bio" rows="3"
+                    class="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-[#5D5FEF] focus:outline-none text-sm font-medium resize-none"></textarea>
+                </div>
+              </div>
+              <div class="flex justify-end pt-2"><button id="btn-save-profile"
+                  class="px-8 py-3 bg-[#5D5FEF] text-white font-bold rounded-xl shadow-lg shadow-indigo-100 hover:opacity-90 transition-all">Save
+                  Changes</button></div>
+            </div>
+          </section>
+          <section id="section-security" class="bg-white rounded-3xl card-shadow border border-gray-50 overflow-hidden">
+            <div class="p-8 border-b border-gray-50">
+              <h3 class="text-lg font-bold text-gray-900">Change Password</h3>
+              <p class="text-sm text-gray-500">Keep your account secure with a strong password.</p>
+            </div>
+            <div class="p-8 space-y-6">
+              <div class="space-y-2"><label class="text-xs font-bold text-gray-500 uppercase">Current
+                  Password</label><input type="password" placeholder="••••••••"
+                  class="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-[#5D5FEF] focus:outline-none text-sm">
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2"><label class="text-xs font-bold text-gray-500 uppercase">New
+                    Password</label><input type="password" placeholder="••••••••"
+                    class="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-[#5D5FEF] focus:outline-none text-sm">
+                </div>
+                <div class="space-y-2"><label class="text-xs font-bold text-gray-500 uppercase">Confirm
+                    Password</label><input type="password" placeholder="••••••••"
+                    class="w-full px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus:border-[#5D5FEF] focus:outline-none text-sm">
+                </div>
+              </div>
+              <div class="flex justify-end"><button
+                  class="px-8 py-3 bg-[#5D5FEF] text-white font-bold rounded-xl shadow-lg shadow-indigo-100 hover:opacity-90 transition-all">Update
+                  Password</button></div>
+            </div>
+          </section>
+          <section id="section-notifications"
+            class="bg-white rounded-3xl card-shadow border border-gray-50 overflow-hidden">
+            <div class="p-8 border-b border-gray-50">
+              <h3 class="text-lg font-bold text-gray-900">Notification Preferences</h3>
+              <p class="text-sm text-gray-500">Choose what updates you want to receive.</p>
+            </div>
+            <div class="p-8 space-y-6">
+              <div class="flex items-center justify-between">
+                <div class="space-y-1">
+                  <p class="text-sm font-bold text-gray-900">Email Notifications</p>
+                  <p class="text-xs text-gray-500">Receive daily summaries and critical alerts via email.</p>
+                </div><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" checked
+                    id="notif-email" class="sr-only peer">
+                  <div
+                    class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#5D5FEF]">
+                  </div>
+                </label>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="space-y-1">
+                  <p class="text-sm font-bold text-gray-900">Push Notifications</p>
+                  <p class="text-xs text-gray-500">Get instant browser notifications for new registrations.</p>
+                </div><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox"
+                    id="notif-push" class="sr-only peer">
+                  <div
+                    class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#5D5FEF]">
+                  </div>
+                </label>
+              </div>
+            </div>
+          </section>
+          <section id="section-appearance"
+            class="bg-white rounded-3xl card-shadow border border-gray-50 overflow-hidden">
+            <div class="p-8 border-b border-gray-50">
+              <h3 class="text-lg font-bold text-gray-900">Platform Preferences</h3>
+              <p class="text-sm text-gray-500">Customize your experience on AssignHub.</p>
+            </div>
+            <div class="p-8 space-y-8">
+              <div class="flex items-center justify-between">
+                <div class="space-y-1">
+                  <p class="text-sm font-bold text-gray-900">Interface Theme</p>
+                  <p class="text-xs text-gray-500">Select how AssignHub looks to you.</p>
+                </div>
+                <div class="flex bg-gray-100 p-1 rounded-xl">
+                  <button id="theme-light"
+                    class="px-4 py-2 text-xs font-bold rounded-lg bg-white shadow-sm text-[#5D5FEF] flex items-center gap-2"><iconify-icon
+                      icon="lucide:sun"></iconify-icon>Light</button>
+                  <button id="theme-dark"
+                    class="px-4 py-2 text-xs font-bold rounded-lg text-gray-500 hover:text-gray-900 flex items-center gap-2"><iconify-icon
+                      icon="lucide:moon"></iconify-icon>Dark</button>
+                </div>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="space-y-1">
+                  <p class="text-sm font-bold text-gray-900">Language</p>
+                  <p class="text-xs text-gray-500">Set your primary language for the UI.</p>
+                </div>
+                <select id="pref-lang"
+                  class="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm font-semibold text-gray-900 appearance-none min-w-[150px]">
+                  <option value="English (US)">English (US)</option>
+                  <option value="Hindi">Hindi</option>
+                  <option value="Spanish">Spanish</option>
+                </select>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="space-y-1">
+                  <p class="text-sm font-bold text-gray-900">Timezone</p>
+                  <p class="text-xs text-gray-500">Auto-detect date and time formats.</p>
+                </div>
+                <select id="pref-tz"
+                  class="px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm font-semibold text-gray-900 appearance-none min-w-[150px]">
+                  <option value="America/Los_Angeles">(GMT-08:00) Pacific Time (US & Canada)</option>
+                  <option value="America/New_York">(GMT-05:00) Eastern Time (US & Canada)</option>
+                  <option value="Europe/London">(GMT+00:00) London</option>
+                  <option value="Europe/Paris">(GMT+01:00) Central European Time</option>
+                  <option value="Asia/Kolkata" selected>(GMT+05:30) Mumbai, Kolkata</option>
+                  <option value="Asia/Singapore">(GMT+08:00) Beijing, Singapore</option>
+                  <option value="Asia/Tokyo">(GMT+09:00) Tokyo</option>
+                  <option value="Australia/Sydney">(GMT+10:00) Sydney</option>
+                </select>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    
+        <!-- Mobile Logout Button -->
+        <div class="mt-4 mb-24 md:hidden flex justify-center">
+            <button id="mobile-logout-btn" class="flex items-center gap-2 px-6 py-3 bg-red-50 text-red-600 rounded-xl font-semibold hover:bg-red-100 transition-colors w-full justify-center">
+                <iconify-icon icon="lucide:log-out"></iconify-icon>
+                <span>Logout</span>
+            </button>
+        </div>
+        </main>
+  </div>
+  <input type="file" id="avatar-upload-input" accept="image/*" class="hidden" />
+  <script>
+    /* AssignHub shared interaction logic */
+    (function () {
+
+      /* ── Toast notification ── */
+      function showToast(msg, type) {
+        var t = document.getElementById('ah-toast');
+        if (!t) {
+          t = document.createElement('div');
+          t.id = 'ah-toast';
+          t.style.cssText = 'position:fixed;bottom:28px;right:28px;z-index:9999;display:flex;align-items:center;gap:10px;padding:14px 22px;border-radius:16px;font-family:inherit;font-size:14px;font-weight:600;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,0.18);transition:opacity .3s,transform .3s;opacity:0;transform:translateY(12px);pointer-events:none;';
+          document.body.appendChild(t);
+        }
+        var icon = type === 'success' ? '✓' : type === 'error' ? '✕' : type === 'warn' ? '⚠' : 'ℹ';
+        var bg = type === 'success' ? '#22c55e' : type === 'error' ? '#ef4444' : type === 'warn' ? '#f59e0b' : '#5D5FEF';
+        t.style.background = bg;
+        t.innerHTML = '<span style="font-size:16px;">' + icon + '</span>' + msg;
+        t.style.opacity = '1'; t.style.transform = 'translateY(0)';
+        clearTimeout(t._timer);
+        t._timer = setTimeout(function () { t.style.opacity = '0'; t.style.transform = 'translateY(12px)'; }, 2800);
+      }
+
+      /* ── Simple confirm modal ── */
+      function showConfirm(title, msg, onYes) {
+        var old = document.getElementById('ah-modal'); if (old) old.remove();
+        var m = document.createElement('div');
+        m.id = 'ah-modal';
+        m.innerHTML = '<div style="position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:10000;display:flex;align-items:center;justify-content:center;">' +
+          '<div style="background:#fff;border-radius:24px;padding:36px 32px;width:360px;box-shadow:0 24px 80px rgba(0,0,0,.2);font-family:inherit;">' +
+          '<h3 style="margin:0 0 10px;font-size:18px;font-weight:800;color:#111;">' + title + '</h3>' +
+          '<p style="margin:0 0 28px;font-size:14px;color:#6b7280;">' + msg + '</p>' +
+          '<div style="display:flex;gap:10px;">' +
+          '<button id="ah-modal-cancel" style="flex:1;padding:12px;background:#f3f4f6;color:#374151;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;">Cancel</button>' +
+          '<button id="ah-modal-ok" style="flex:1;padding:12px;background:#5D5FEF;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;">Confirm</button>' +
+          '</div></div></div>';
+        document.body.appendChild(m);
+        document.getElementById('ah-modal-cancel').onclick = function () { m.remove(); };
+        document.getElementById('ah-modal-ok').onclick = function () { m.remove(); onYes(); };
+        m.firstElementChild.onclick = function (e) { if (e.target === this) m.remove(); };
+      }
+
+      /* expose globals */
+      window.AH = { showToast: showToast, showConfirm: showConfirm };
+    })();
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // Settings tabs
+      var tabs = document.querySelectorAll('aside.lg\\:w-64 button');
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          tabs.forEach(function (t) { t.className = t.className.replace('bg-indigo-50 text-[#5D5FEF] font-bold', 'text-gray-500 hover:bg-gray-50'); });
+          this.className = this.className.replace('text-gray-500 hover:bg-gray-50', 'bg-indigo-50 text-[#5D5FEF] font-bold');
+
+          var text = this.textContent.trim().toLowerCase();
+          var targetId = '';
+          if (text === 'account') targetId = 'section-account';
+          else if (text === 'security') targetId = 'section-security';
+          else if (text === 'notifications') targetId = 'section-notifications';
+          else if (text === 'appearance') targetId = 'section-appearance';
+          else {
+            AH.showToast(text.charAt(0).toUpperCase() + text.slice(1) + ' settings coming soon!', 'info');
+            return;
+          }
+
+          var targetEl = document.getElementById(targetId);
+          if (targetEl) {
+            targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+
+      // Dummy save buttons handler removed.
+    });
+
+    // Student settings - load and save profile
+    document.addEventListener('DOMContentLoaded', async function () {
+      if (!AHApi.guardStudent()) return;
+      var user = AHApi.Auth.getUser();
+      if (user) {
+        document.querySelectorAll('img[src*="dicebear"]').forEach(function (el) { el.src = AHApi.avatarUrl(user.avatar_seed || user.full_name); });
+        document.querySelectorAll('p.text-sm.font-semibold.truncate').forEach(function (el) { el.textContent = user.full_name || ''; });
+        document.querySelectorAll('p.text-xs.text-gray-400.truncate').forEach(function (el) { if (el.textContent.includes('Roll')) el.textContent = 'Roll: ' + (user.roll_number || ''); });
+        document.querySelectorAll('p.text-sm.font-bold.text-gray-900').forEach(function (el) { el.textContent = user.full_name || ''; });
+        document.querySelectorAll('p.text-xs.text-gray-500').forEach(function (el) { if (el.textContent.includes('Roll:')) el.textContent = 'Roll: ' + (user.roll_number || ''); });
+
+        var nameInput = document.getElementById('profile-name');
+        if (nameInput) nameInput.value = user.full_name || '';
+        var emailInput = document.getElementById('profile-email');
+        if (emailInput) emailInput.value = user.email || '';
+        var rollInput = document.getElementById('profile-roll');
+        if (rollInput) rollInput.value = user.roll_number || '';
+        var deptInput = document.getElementById('profile-dept');
+        if (deptInput) deptInput.value = user.department || '';
+        var bioInputLoad = document.getElementById('profile-bio');
+        if (bioInputLoad) bioInputLoad.value = user.bio || '';
+      }
+      var logoutLinks = document.querySelectorAll('#nav-logout, #mobile-logout-btn, [href="login.html"], [\\:href="logoutHref"]');
+      logoutLinks.forEach(function(btn) {
+        btn.addEventListener('click', function (e) {
+          e.preventDefault();
+          AHApi.Auth.logout();
+        });
+      });
+
+      // Avatar Upload Logic
+      var avatarInput = document.getElementById('avatar-upload-input');
+      var uploadBtn = document.querySelector('button.px-4.py-2.bg-\\[\\#5D5FEF\\]') || document.querySelector('button.px-4.py-2');
+      var avatarOverlayBtn = document.querySelector('button.absolute.inset-0');
+      var avatarImages = document.querySelectorAll('img[src*="dicebear"], img[src^="data:image"]');
+
+      if (user && user.avatar_url) {
+        avatarImages.forEach(function (img) { img.src = user.avatar_url; });
+      }
+
+      function openFilePicker() { if (avatarInput) avatarInput.click(); }
+      if (uploadBtn) uploadBtn.addEventListener('click', openFilePicker);
+      if (avatarOverlayBtn) avatarOverlayBtn.addEventListener('click', openFilePicker);
+
+      if (avatarInput) {
+        avatarInput.addEventListener('change', function (e) {
+          var file = e.target.files[0];
+          if (!file) return;
+
+          var reader = new FileReader();
+          reader.onload = async function (event) {
+            var base64 = event.target.result;
+
+            // Preview immediately locally
+            avatarImages.forEach(function (img) { img.src = base64; });
+
+            // Upload to server
+            var res = await AHApi.UsersAPI.updateAvatar(base64);
+            if (res.success) {
+              AH.showToast('Profile photo updated!', 'success');
+              var u = AHApi.Auth.getUser();
+              AHApi.Auth.setUser(Object.assign({}, u, res.user));
+              AHApi.populateUserInfo(AHApi.Auth.getUser());
+            } else {
+              AH.showToast('Failed to upload photo.', 'error');
+            }
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      var saveBtn = document.getElementById('btn-save-profile');
+      if (saveBtn) {
+        saveBtn.addEventListener('click', async function () {
+          var oldText = saveBtn.textContent;
+          saveBtn.textContent = 'Saving...';
+          saveBtn.disabled = true;
+
+          var nameInput = document.getElementById('profile-name');
+          var emailInput = document.getElementById('profile-email');
+          var deptInput = document.getElementById('profile-dept');
+          var bioInput = document.getElementById('profile-bio');
+
+          var res = await AHApi.UsersAPI.updateProfile({
+            full_name: nameInput ? nameInput.value.trim() : undefined,
+            email: emailInput ? emailInput.value.trim() : undefined,
+            department: deptInput ? deptInput.value.trim() : undefined,
+            bio: bioInput ? bioInput.value.trim() : undefined
+          });
+
+          if (res.success) {
+            AH.showToast('Profile saved!', 'success');
+            var u = AHApi.Auth.getUser();
+            var updatedUser = Object.assign({}, u, res.user);
+            AHApi.Auth.setUser(updatedUser);
+            AHApi.populateUserInfo(updatedUser);
+          } else {
+            AH.showToast('Failed to save profile.', 'error');
+          }
+
+          saveBtn.textContent = oldText;
+          saveBtn.disabled = false;
+        });
+      }
+
+      // Preferences Logic
+      var langSelect = document.getElementById('pref-lang');
+      var tzSelect = document.getElementById('pref-tz');
+      var themeLight = document.getElementById('theme-light');
+      var themeDark = document.getElementById('theme-dark');
+
+      function setThemeUI(isDark) {
+        if (isDark) {
+          themeDark.className = 'px-4 py-2 text-xs font-bold rounded-lg bg-white shadow-sm text-[#5D5FEF] flex items-center gap-2';
+          themeLight.className = 'px-4 py-2 text-xs font-bold rounded-lg text-gray-500 hover:text-gray-900 flex items-center gap-2';
+        } else {
+          themeLight.className = 'px-4 py-2 text-xs font-bold rounded-lg bg-white shadow-sm text-[#5D5FEF] flex items-center gap-2';
+          themeDark.className = 'px-4 py-2 text-xs font-bold rounded-lg text-gray-500 hover:text-gray-900 flex items-center gap-2';
+        }
+        AHApi.Theme.set(isDark ? 'dark' : 'light');
+      }
+
+      var prefsStr = localStorage.getItem('ah_admin_platform');
+      var prefs = { lang: 'English (US)', tz: '(GMT+05:30) Mumbai, Kolkata' };
+      if (prefsStr) {
+        try { prefs = JSON.parse(prefsStr); } catch (e) { }
+      }
+      if (langSelect) langSelect.value = prefs.lang || 'English (US)';
+      if (tzSelect) tzSelect.value = prefs.tz || '(GMT+05:30) Mumbai, Kolkata';
+
+      // Sync UI with current theme
+      var currentTheme = localStorage.getItem('ah_theme') || 'light';
+      if (themeLight && themeDark) {
+        setThemeUI(currentTheme === 'dark');
+      }
+
+      function savePrefs() {
+        prefs.lang = langSelect.value;
+        prefs.tz = tzSelect.value;
+        localStorage.setItem('ah_admin_platform', JSON.stringify(prefs));
+        AH.showToast('Preferences updated permanently.', 'success');
+      }
+
+      if (langSelect) langSelect.onchange = function () { savePrefs(); window.location.reload(); };
+      if (tzSelect) tzSelect.onchange = savePrefs;
+      if (themeLight) themeLight.onclick = function () { setThemeUI(false); AH.showToast('Light theme applied globally', 'success'); };
+      if (themeDark) themeDark.onclick = function () { setThemeUI(true); AH.showToast('Dark theme applied globally', 'success'); };
+
+      // Notification Toggles State Management
+      var notifEmail = document.getElementById('notif-email');
+      var notifPush = document.getElementById('notif-push');
+
+      if (notifEmail) {
+        notifEmail.checked = localStorage.getItem('ah_notif_email') !== 'false';
+        notifEmail.addEventListener('change', function () {
+          localStorage.setItem('ah_notif_email', this.checked);
+          AH.showToast('Email notifications ' + (this.checked ? 'enabled' : 'disabled'), 'success');
+        });
+      }
+      if (notifPush) {
+        notifPush.checked = localStorage.getItem('ah_notif_push') === 'true';
+        notifPush.addEventListener('change', function () {
+          localStorage.setItem('ah_notif_push', this.checked);
+          AH.showToast('Push notifications ' + (this.checked ? 'enabled' : 'disabled'), 'success');
+        });
+      }
+    });
+
+  </script>
+  <!-- Mobile Bottom Navigation -->
+  <div class="mobile-bottom-nav">
+    <a href="student-dashboard.html" class="nav-dashboard">
+      <iconify-icon icon="lucide:layout-dashboard" class="text-xl"></iconify-icon>
+      <span>Home</span>
+    </a>
+    <a href="student-assignments.html" class="nav-assignments">
+      <iconify-icon icon="lucide:book-open" class="text-xl"></iconify-icon>
+      <span>Tasks</span>
+    </a>
+    <a href="student-submissions.html" class="nav-submissions">
+      <iconify-icon icon="lucide:send" class="text-xl"></iconify-icon>
+      <span>Submit</span>
+    </a>
+    <a href="student-notifications.html" class="nav-notifications">
+      <iconify-icon icon="lucide:bell" class="text-xl"></iconify-icon>
+      <span>Alerts</span>
+    </a>
+    <a href="student-settings.html" class="nav-settings active">
+      <iconify-icon icon="lucide:settings" class="text-xl"></iconify-icon>
+      <span>Settings</span>
+    </a>
+  </div>
+</body>
+
+</html>

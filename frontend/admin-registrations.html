@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registrations Queue | AssignHub Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif
+    }
+
+    .sidebar-gradient {
+      background: #131432
+    }
+
+    .card-shadow {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05)
+    }
+
+    .accent-purple {
+      color: #5D5FEF
+    }
+
+    .bg-accent-purple {
+      background-color: #5D5FEF
+    }
+
+    .bg-accent-purple-light {
+      background-color: rgba(93, 95, 239, 0.1)
+    }
+  </style>
+  <style>
+    sd-component {
+      display: block;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/petite-vue@0.4.1/dist/petite-vue.iife.js" defer init></script>
+  <script src="/api.js"></script>
+
+  <style id="safe-mobile-fixes">
+    /* 2026 Mobile Enhancements */
+    @media (max-width: 768px) {
+
+      html,
+      body {
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+      }
+
+      .sidebar {
+        display: none !important;
+      }
+
+      main,
+      .main-content {
+        margin-left: 0 !important;
+        padding: 16px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding-bottom: 80px !important;
+        /* Bottom nav space */
+      }
+
+      .card {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        margin-bottom: 20px !important;
+      }
+
+      table {
+        display: block !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        width: 100% !important;
+        -webkit-overflow-scrolling: touch !important;
+      }
+
+      input,
+      select,
+      textarea,
+      button,
+      .btn {
+        min-height: 48px !important;
+        font-size: 16px !important;
+      }
+
+      /* Mobile Bottom Navigation */
+      .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border-top: 1px solid #eaeaea;
+        justify-content: space-around;
+        padding: 10px 0;
+        z-index: 9999;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .mobile-bottom-nav a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #64748b;
+        text-decoration: none;
+        font-size: 12px;
+        gap: 4px;
+      }
+
+      .mobile-bottom-nav a.active {
+        color: #6366f1;
+      }
+    }
+
+    @media (min-width: 769px) {
+
+      .mobile-bottom-nav,
+      .mobile-top-bar {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="min-h-screen bg-[#F8F9FC] flex"><!-- component: Sidebar (9f9a9751-b7b0-44c9-8e70-a1fa1ece909e) -->
+    <div
+      v-scope="{ ...{&quot;activeItem&quot;:&quot;registrations&quot;,&quot;dashboardHref&quot;:&quot;admin-dashboard.html&quot;,&quot;registrationsHref&quot;:&quot;admin-registrations.html&quot;,&quot;registrationBadgeCount&quot;:12,&quot;assignmentsHref&quot;:&quot;admin-assignments.html&quot;,&quot;submissionsHref&quot;:&quot;admin-submissions.html&quot;,&quot;studentsHref&quot;:&quot;admin-students.html&quot;,&quot;analyticsHref&quot;:&quot;admin-analytics.html&quot;,&quot;notificationsHref&quot;:&quot;admin-notifications.html&quot;,&quot;settingsHref&quot;:&quot;admin-settings.html&quot;,&quot;logoutHref&quot;:&quot;login.html&quot;}, $emit() {} }">
+      <aside class="w-[260px] bg-[#131432] text-white flex flex-col fixed h-full z-50">
+        <div class="p-8">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-[#5D5FEF] rounded-xl flex items-center justify-center">
+              <iconify-icon icon="lucide:graduation-cap" class="text-2xl text-white"></iconify-icon>
+            </div>
+            <span class="text-xl font-bold tracking-tight">AssignHub</span>
+          </div>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-1">
+          <a :href="dashboardHref" id="nav-dashboard"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'dashboard' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:layout-grid" class="text-xl"></iconify-icon>
+            <span class="font-medium">Dashboard</span>
+          </a>
+          <a :href="registrationsHref" id="nav-registrations"
+            class="flex items-center justify-between px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'registrations' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <div class="flex items-center gap-3">
+              <iconify-icon icon="lucide:user-plus" class="text-xl"></iconify-icon>
+              <span class="font-medium">Registrations</span>
+            </div>
+            <span v-if="registrationBadgeCount > 0"
+              class="bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">
+              {{ registrationBadgeCount }}
+            </span>
+          </a>
+          <a :href="assignmentsHref" id="nav-assignments"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'assignments' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:book-open" class="text-xl"></iconify-icon>
+            <span class="font-medium">Assignments</span>
+          </a>
+          <a :href="submissionsHref" id="nav-submissions"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'submissions' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:send" class="text-xl"></iconify-icon>
+            <span class="font-medium">Submissions</span>
+          </a>
+          <a :href="studentsHref" id="nav-students" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'students' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:users" class="text-xl"></iconify-icon>
+            <span class="font-medium">Students</span>
+          </a>
+          <a :href="analyticsHref" id="nav-analytics"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'analytics' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:bar-chart-3" class="text-xl"></iconify-icon>
+            <span class="font-medium">Analytics</span>
+          </a>
+          <a :href="notificationsHref" id="nav-notifications"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'notifications' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:bell" class="text-xl"></iconify-icon>
+            <span class="font-medium">Notifications</span>
+          </a>
+          <a :href="settingsHref" id="nav-settings" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'settings' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:settings" class="text-xl"></iconify-icon>
+            <span class="font-medium">Settings</span>
+          </a>
+        </nav>
+
+        <div class="p-4 border-t border-white/10">
+          <div class="flex items-center gap-3 px-4 py-4">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Meera" alt="Admin Avatar"
+              class="w-10 h-10 rounded-full bg-gray-200">
+            <div class="flex-1 overflow-hidden">
+              <p class="text-sm font-semibold truncate">Dr. Meera Sharma</p>
+              <p class="text-xs text-gray-400 truncate">Administrator</p>
+            </div>
+          </div>
+          <a :href="logoutHref" id="nav-logout"
+            class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-red-400 transition-all">
+            <iconify-icon icon="lucide:log-out" class="text-xl"></iconify-icon>
+            <span class="font-medium">Logout</span>
+          </a>
+        </div>
+      </aside>
+    </div>
+    <!-- /component: Sidebar (9f9a9751-b7b0-44c9-8e70-a1fa1ece909e) -->
+    <main class="flex-1 ml-[260px] p-8">
+      <header class="flex items-center justify-between mb-8">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">Registrations Queue</h1>
+          <p class="text-gray-500">Verify and approve new student account requests</p>
+        </div>
+        <div class="flex items-center gap-4"><button id="header-notif-btn"
+            class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"><iconify-icon
+              icon="lucide:bell" class="text-xl"></iconify-icon></button>
+          <div class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-xl"><iconify-icon
+              icon="lucide:search" class="text-gray-400"></iconify-icon><input type="text"
+              placeholder="Search students..." class="outline-none text-sm w-48 text-gray-600 bg-transparent"></div>
+        </div>
+      </header>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-3xl card-shadow border border-gray-50 flex items-center gap-4">
+          <div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center"><iconify-icon
+              icon="lucide:clock-3" class="text-2xl"></iconify-icon></div>
+          <div>
+            <p class="text-sm font-medium text-gray-500">Pending Requests</p>
+            <h3 class="text-2xl font-bold text-gray-900">12</h3>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-3xl card-shadow border border-gray-50 flex items-center gap-4">
+          <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center">
+            <iconify-icon icon="lucide:user-check" class="text-2xl"></iconify-icon>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-gray-500">Approved Today</p>
+            <h3 class="text-2xl font-bold text-gray-900">45</h3>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-3xl card-shadow border border-gray-50 flex items-center gap-4">
+          <div class="w-12 h-12 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center"><iconify-icon
+              icon="lucide:user-x" class="text-2xl"></iconify-icon></div>
+          <div>
+            <p class="text-sm font-medium text-gray-500">Rejected Today</p>
+            <h3 class="text-2xl font-bold text-gray-900">3</h3>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-3xl card-shadow border border-gray-50 overflow-hidden">
+        <div class="p-6 border-b border-gray-50 flex items-center justify-between">
+          <div class="flex gap-4"><button
+              class="px-4 py-2 text-sm font-semibold text-white bg-accent-purple rounded-lg">All Pending</button><button
+              class="px-4 py-2 text-sm font-semibold text-gray-500 hover:bg-gray-50 rounded-lg">By Department</button>
+          </div><button
+            class="flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-accent-purple transition-colors"><iconify-icon
+              icon="lucide:filter"></iconify-icon><span>More Filters</span></button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead class="bg-gray-50/50">
+              <tr class="text-gray-400 text-xs font-semibold uppercase tracking-wider">
+                <th class="px-8 py-4">Applicant Details</th>
+                <th class="px-8 py-4">Contact Info</th>
+                <th class="px-8 py-4">Department</th>
+                <th class="px-8 py-4">Applied Date</th>
+                <th class="px-8 py-4 text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50"></tbody>
+          </table>
+        </div>
+        <div class="p-6 border-t border-gray-50 flex items-center justify-between"><span id="summaryText"
+            class="text-sm text-gray-500">Loading...</span>
+          <div class="flex gap-2"><button class="p-2 text-gray-400 hover:text-accent-purple"><iconify-icon
+                icon="lucide:chevron-left"></iconify-icon></button><button
+              class="w-8 h-8 rounded-lg bg-accent-purple text-white text-sm font-bold">1</button><button
+              class="w-8 h-8 rounded-lg hover:bg-gray-100 text-gray-600 text-sm font-bold">2</button><button
+              class="p-2 text-gray-400 hover:text-accent-purple"><iconify-icon
+                icon="lucide:chevron-right"></iconify-icon></button></div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script>
+    /* AssignHub shared interaction logic */
+    (function () {
+
+      /* ── Toast notification ── */
+      function showToast(msg, type) {
+        var t = document.getElementById('ah-toast');
+        if (!t) {
+          t = document.createElement('div');
+          t.id = 'ah-toast';
+          t.style.cssText = 'position:fixed;bottom:28px;right:28px;z-index:9999;display:flex;align-items:center;gap:10px;padding:14px 22px;border-radius:16px;font-family:inherit;font-size:14px;font-weight:600;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,0.18);transition:opacity .3s,transform .3s;opacity:0;transform:translateY(12px);pointer-events:none;';
+          document.body.appendChild(t);
+        }
+        var icon = type === 'success' ? '✓' : type === 'error' ? '✕' : type === 'warn' ? '⚠' : 'ℹ';
+        var bg = type === 'success' ? '#22c55e' : type === 'error' ? '#ef4444' : type === 'warn' ? '#f59e0b' : '#5D5FEF';
+        t.style.background = bg;
+        t.innerHTML = '<span style="font-size:16px;">' + icon + '</span>' + msg;
+        t.style.opacity = '1'; t.style.transform = 'translateY(0)';
+        clearTimeout(t._timer);
+        t._timer = setTimeout(function () { t.style.opacity = '0'; t.style.transform = 'translateY(12px)'; }, 2800);
+      }
+
+      /* ── Simple confirm modal ── */
+      function showConfirm(title, msg, onYes) {
+        var old = document.getElementById('ah-modal'); if (old) old.remove();
+        var m = document.createElement('div');
+        m.id = 'ah-modal';
+        m.innerHTML = '<div style="position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:10000;display:flex;align-items:center;justify-content:center;">' +
+          '<div style="background:#fff;border-radius:24px;padding:36px 32px;width:360px;box-shadow:0 24px 80px rgba(0,0,0,.2);font-family:inherit;">' +
+          '<h3 style="margin:0 0 10px;font-size:18px;font-weight:800;color:#111;">' + title + '</h3>' +
+          '<p style="margin:0 0 28px;font-size:14px;color:#6b7280;">' + msg + '</p>' +
+          '<div style="display:flex;gap:10px;">' +
+          '<button id="ah-modal-cancel" style="flex:1;padding:12px;background:#f3f4f6;color:#374151;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;">Cancel</button>' +
+          '<button id="ah-modal-ok" style="flex:1;padding:12px;background:#5D5FEF;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;">Confirm</button>' +
+          '</div></div></div>';
+        document.body.appendChild(m);
+        document.getElementById('ah-modal-cancel').onclick = function () { m.remove(); };
+        document.getElementById('ah-modal-ok').onclick = function () { m.remove(); onYes(); };
+        m.firstElementChild.onclick = function (e) { if (e.target === this) m.remove(); };
+      }
+
+      /* expose globals */
+      window.AH = { showToast: showToast, showConfirm: showConfirm };
+    })();
+
+    // Admin registrations - load real pending registrations dynamically
+    document.addEventListener('DOMContentLoaded', async function () {
+      if (!AHApi.guardAdmin()) return;
+      var logoutLink = document.getElementById('nav-logout');
+      if (logoutLink) logoutLink.addEventListener('click', function (e) { e.preventDefault(); AHApi.Auth.logout(); });
+
+      var notifBtn = document.getElementById('header-notif-btn');
+      if (notifBtn) notifBtn.onclick = function () { window.location.href = 'admin-notifications.html'; };
+
+      let currentParams = { page: 1, limit: 10, search: '', department: '' };
+
+      async function loadRegistrations() {
+        var tbody = document.querySelector('tbody');
+        if (!tbody) return;
+
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center py-8 text-sm text-gray-500">Loading registrations...</td></tr>';
+
+        try {
+          // 1. Fetch Stats for the cards
+          var statsRes = await AHApi.UsersAPI.stats();
+          if (statsRes.success) {
+            var s = statsRes.stats;
+            var pendingCards = document.querySelectorAll('h3.text-2xl.font-bold.text-gray-900');
+            if (pendingCards[0]) pendingCards[0].textContent = s.pending_approvals || 0;
+            if (pendingCards[1]) pendingCards[1].textContent = s.approved_today || 0;
+            if (pendingCards[2]) {
+              pendingCards[2].textContent = 'N/A'; // We don't track hard-deleted rejections
+              var pCardText = pendingCards[2].previousElementSibling;
+              if (pCardText) pCardText.textContent = 'Deleted Today';
+            }
+
+            var badge = document.querySelector('.bg-red-500.text-white.text-\\[10px\\]');
+            if (badge) {
+              if (s.pending_approvals > 0) {
+                badge.style.display = 'flex';
+                badge.textContent = s.pending_approvals;
+              } else {
+                badge.style.display = 'none';
+              }
+            }
+          }
+
+          // 2. Fetch pending registrations list
+          var prRes = await AHApi.UsersAPI.pendingRegistrations(currentParams);
+          if (!prRes.success) throw new Error();
+
+          var usersList = prRes.users || [];
+          tbody.innerHTML = '';
+
+          if (usersList.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center py-8 text-sm text-gray-500">No pending registrations match your criteria.</td></tr>';
+          } else {
+            usersList.forEach(function (u) {
+              var tr = document.createElement('tr');
+              var deptColor = u.department === 'Computer Science' ? 'blue' : (u.department === 'Physics' ? 'purple' : 'orange');
+
+              tr.innerHTML = '<td class="px-8 py-5"><div class="flex items-center gap-4"><img src="' + AHApi.avatarUrl(u.avatar_seed || u.full_name) + '" class="w-10 h-10 rounded-full bg-gray-100"><div class="flex flex-col"><span class="text-sm font-bold text-gray-900">' + (u.full_name || '') + '</span><span class="text-xs text-gray-500">Roll No: ' + (u.roll_number || 'N/A') + '</span></div></div></td><td class="px-8 py-5 text-sm text-gray-600">' + (u.email || '') + '</td><td class="px-8 py-5"><span class="px-3 py-1 bg-' + deptColor + '-50 text-' + deptColor + '-600 text-xs font-semibold rounded-full">' + (u.department || 'Unknown') + '</span></td><td class="px-8 py-5 text-sm text-gray-500">' + AHApi.formatDate(u.created_at) + '</td><td class="px-8 py-5"><div class="flex justify-center gap-3"><button data-id="' + u.id + '" class="approve-btn w-9 h-9 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all shadow-sm" title="Approve"><iconify-icon icon="lucide:check-circle"></iconify-icon></button><button data-id="' + u.id + '" class="reject-btn w-9 h-9 bg-red-50 text-red-600 rounded-xl flex items-center justify-center hover:bg-red-600 hover:text-white transition-all shadow-sm" title="Reject"><iconify-icon icon="lucide:x-circle"></iconify-icon></button></div></td>';
+              tbody.appendChild(tr);
+            });
+          }
+
+          // 3. Update Pagination Info
+          var summaryText = document.querySelector('.p-6.border-t.border-gray-50 span');
+          if (summaryText) {
+            var start = prRes.total === 0 ? 0 : (prRes.page - 1) * currentParams.limit + 1;
+            var end = Math.min(prRes.page * currentParams.limit, prRes.total);
+            summaryText.textContent = 'Showing ' + start + ' to ' + end + ' of ' + prRes.total + ' pending requests';
+          }
+
+          // 4. Update Pagination Buttons
+          var pageButtonsContainer = document.querySelector('.p-6.border-t.border-gray-50 .flex.gap-2');
+          if (pageButtonsContainer) {
+            pageButtonsContainer.innerHTML = '';
+
+            // prev
+            var prev = document.createElement('button');
+            prev.className = 'p-2 transition-all ' + (prRes.page > 1 ? 'text-gray-400 hover:text-accent-purple' : 'text-gray-200 cursor-not-allowed');
+            prev.innerHTML = '<iconify-icon icon="lucide:chevron-left"></iconify-icon>';
+            if (prRes.page > 1) prev.onclick = function () { currentParams.page--; loadRegistrations(); };
+            pageButtonsContainer.appendChild(prev);
+
+            for (var i = 1; i <= prRes.pages; i++) {
+              var pBtn = document.createElement('button');
+              pBtn.className = 'w-8 h-8 rounded-lg text-sm font-bold ' + (i === prRes.page ? 'bg-accent-purple text-white' : 'hover:bg-gray-100 text-gray-600');
+              pBtn.textContent = i;
+              pBtn.dataset.page = i;
+              if (i !== prRes.page) pBtn.onclick = function () { currentParams.page = parseInt(this.dataset.page); loadRegistrations(); };
+              pageButtonsContainer.appendChild(pBtn);
+            }
+
+            // next
+            var next = document.createElement('button');
+            next.className = 'p-2 transition-all ' + (prRes.page < prRes.pages ? 'text-gray-400 hover:text-accent-purple' : 'text-gray-200 cursor-not-allowed');
+            next.innerHTML = '<iconify-icon icon="lucide:chevron-right"></iconify-icon>';
+            if (prRes.page < prRes.pages) next.onclick = function () { currentParams.page++; loadRegistrations(); };
+            pageButtonsContainer.appendChild(next);
+          }
+
+        } catch (e) {
+          tbody.innerHTML = '<tr><td colspan="5" class="text-center py-8 text-sm text-red-500">Error loading registrations</td></tr>';
+        }
+      }
+
+      // Bind Actions (Approve/Reject) using Event Delegation
+      document.querySelector('tbody').addEventListener('click', async function (e) {
+        var approveBtn = e.target.closest('.approve-btn');
+        if (approveBtn) {
+          var id = approveBtn.getAttribute('data-id');
+          if (id) {
+            var updateRes = await AHApi.UsersAPI.updateStatus(id, 'active');
+            if (updateRes.success) {
+              AH.showToast('Student approved successfully!', 'success');
+              loadRegistrations();
+            } else {
+              AH.showToast(updateRes.message || 'Error approving', 'error');
+            }
+          }
+        }
+        var rejectBtn = e.target.closest('.reject-btn');
+        if (rejectBtn) {
+          var id = rejectBtn.getAttribute('data-id');
+          if (id) {
+            AH.showConfirm('Reject Registration', 'Are you sure you want to reject this registration? The request will be permanently deleted.', async function () {
+              var delRes = await AHApi.UsersAPI.delete(id);
+              if (delRes.success) {
+                AH.showToast('Registration rejected', 'warn');
+                loadRegistrations();
+              } else {
+                AH.showToast(delRes.message || 'Error rejecting', 'error');
+              }
+            });
+          }
+        }
+      });
+
+      // Bind Search Input
+      var searchInput = document.querySelector('input[type="text"]');
+      if (searchInput) {
+        var searchTimeout;
+        searchInput.addEventListener('input', function (e) {
+          clearTimeout(searchTimeout);
+          searchTimeout = setTimeout(function () {
+            currentParams.search = e.target.value.trim();
+            currentParams.page = 1;
+            loadRegistrations();
+          }, 300);
+        });
+      }
+
+      // Bind Filter Tabs
+      var filterContainer = document.querySelector('.p-6.border-b.border-gray-50 .flex.gap-4');
+      if (filterContainer) {
+        var tabs = filterContainer.querySelectorAll('button');
+        tabs.forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            if (this.textContent.includes('All Pending')) {
+              currentParams.department = '';
+              currentParams.page = 1;
+              tabs[0].className = 'px-4 py-2 text-sm font-semibold text-white bg-accent-purple rounded-lg';
+              tabs[1].className = 'px-4 py-2 text-sm font-semibold text-gray-500 hover:bg-gray-50 rounded-lg';
+              loadRegistrations();
+            } else if (this.textContent.includes('By Department')) {
+              // For simplicity, cycle through departments or prompt
+              var dept = prompt('Enter department name (e.g. Computer Science):');
+              if (dept !== null) {
+                currentParams.department = dept.trim();
+                currentParams.page = 1;
+                tabs[1].className = 'px-4 py-2 text-sm font-semibold text-white bg-accent-purple rounded-lg';
+                tabs[0].className = 'px-4 py-2 text-sm font-semibold text-gray-500 hover:bg-gray-50 rounded-lg';
+                loadRegistrations();
+              }
+            }
+          });
+        });
+      }
+
+      // Initial load
+      loadRegistrations();
+    });
+
+  </script>
+</body>
+
+</html>

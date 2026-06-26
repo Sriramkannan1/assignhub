@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Login | AssignHub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: #F0F1FF;
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 32px;
+      box-shadow: 0 20px 60px rgba(93, 95, 239, 0.12);
+      width: 100%;
+      max-width: 400px;
+      overflow: hidden
+    }
+
+    .tab-pill {
+      display: flex;
+      background: #F0F1FF;
+      border-radius: 16px;
+      padding: 4px;
+      gap: 4px;
+      margin-bottom: 28px
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 11px 0;
+      border: none;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .25s;
+      background: transparent;
+      color: #9CA3AF
+    }
+
+    .tab-btn.active {
+      background: #5D5FEF;
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(93, 95, 239, 0.3)
+    }
+
+    .input-wrap {
+      position: relative;
+      margin-bottom: 16px
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9CA3AF;
+      font-size: 18px;
+      pointer-events: none
+    }
+
+    .field {
+      width: 100%;
+      padding: 14px 16px 14px 46px;
+      background: #F8F9FC;
+      border: 1.5px solid #E5E7EB;
+      border-radius: 16px;
+      font-family: inherit;
+      font-size: 15px;
+      color: #111;
+      outline: none;
+      transition: border-color .2s
+    }
+
+    .field:focus {
+      border-color: #5D5FEF;
+      background: #fff
+    }
+
+    .eye-btn {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #9CA3AF;
+      padding: 4px;
+      display: flex
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 16px;
+      background: #5D5FEF;
+      color: #fff;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 800;
+      border: none;
+      border-radius: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 8px 24px rgba(93, 95, 239, 0.35);
+      transition: all .2s;
+      margin-top: 8px;
+      letter-spacing: .01em
+    }
+
+    .login-btn:active {
+      transform: scale(0.98);
+      opacity: .92
+    }
+
+    .login-btn:disabled {
+      opacity: .6;
+      cursor: not-allowed
+    }
+
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0;
+      color: #D1D5DB;
+      font-size: 12px;
+      font-weight: 600
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #E5E7EB
+    }
+  </style>
+  <script src="/api.js"></script>
+
+  <style id="safe-mobile-fixes">
+    /* 2026 Mobile Enhancements */
+    @media (max-width: 768px) {
+
+      html,
+      body {
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+      }
+
+      aside.w-\[260px\], aside.w-64, .sidebar { display: none !important; }
+
+      main,
+      .main-content {
+        margin-left: 0 !important;
+        padding: 16px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding-bottom: 80px !important;
+        /* Bottom nav space */
+      }
+
+      .card {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        margin-bottom: 20px !important;
+      }
+
+      table {
+        display: block !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        width: 100% !important;
+        -webkit-overflow-scrolling: touch !important;
+      }
+
+      input,
+      select,
+      textarea,
+      button,
+      .btn {
+        min-height: 48px !important;
+        font-size: 16px !important;
+      }
+
+      /* Mobile Bottom Navigation */
+      .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border-top: 1px solid #eaeaea;
+        justify-content: space-around;
+        padding: 10px 0;
+        z-index: 9999;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .mobile-bottom-nav a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #64748b;
+        text-decoration: none;
+        font-size: 12px;
+        gap: 4px;
+      }
+
+      .mobile-bottom-nav a.active {
+        color: #6366f1;
+      }
+    }
+
+    @media (min-width: 769px) {
+
+      .mobile-bottom-nav,
+      .mobile-top-bar {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <!-- Top brand bar -->
+    <div style="background:linear-gradient(135deg,#131432 0%,#5D5FEF 100%);padding:28px 28px 24px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+        <div
+          style="width:40px;height:40px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.2)">
+          <iconify-icon icon="lucide:graduation-cap" style="font-size:22px;color:#fff"></iconify-icon>
+        </div>
+        <span style="font-size:22px;font-weight:800;color:#fff;letter-spacing:-.5px">AssignHub</span>
+      </div>
+      <p style="color:rgba(255,255,255,0.9);font-size:20px;font-weight:700;margin:0 0 4px">Welcome back 👋</p>
+      <p style="color:rgba(255,255,255,0.55);font-size:13px;margin:0">Sign in to continue your journey</p>
+    </div>
+
+    <!-- Form area -->
+    <div style="padding:28px">
+
+      <!-- Role toggle -->
+      <div class="tab-pill">
+        <button class="tab-btn active" id="tab-student" onclick="switchRole('student')">
+          <iconify-icon icon="lucide:user"
+            style="font-size:14px;vertical-align:-2px;margin-right:4px"></iconify-icon>Student
+        </button>
+        <button class="tab-btn" id="tab-admin" onclick="switchRole('admin')">
+          <iconify-icon icon="lucide:shield"
+            style="font-size:14px;vertical-align:-2px;margin-right:4px"></iconify-icon>Admin
+        </button>
+      </div>
+
+      <!-- Role hint -->
+      <div id="role-hint"
+        style="display:flex;align-items:center;gap:8px;background:#F0F1FF;border-radius:12px;padding:10px 14px;margin-bottom:20px">
+        <iconify-icon icon="lucide:info" style="color:#5D5FEF;font-size:16px;flex-shrink:0"></iconify-icon>
+        <span id="role-hint-text" style="font-size:12px;color:#5D5FEF;font-weight:600">Use your roll number or email to
+          sign in</span>
+      </div>
+
+      <!-- Identifier field -->
+      <div class="input-wrap">
+        <iconify-icon icon="lucide:user" class="input-icon"></iconify-icon>
+        <input id="identifier" class="field" type="text" placeholder="Roll number or email" autocomplete="username"
+          autocapitalize="none">
+      </div>
+
+      <!-- Password field -->
+      <div class="input-wrap">
+        <iconify-icon icon="lucide:lock" class="input-icon"></iconify-icon>
+        <input id="password" class="field" type="password" placeholder="Password" autocomplete="current-password"
+          style="padding-right:46px">
+        <button class="eye-btn" type="button" onclick="toggleEye()" id="eye-btn">
+          <iconify-icon icon="lucide:eye" id="eye-icon" style="font-size:18px"></iconify-icon>
+        </button>
+      </div>
+
+      <!-- Remember + Forgot -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+        <label
+          style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-weight:600;color:#6B7280">
+          <input type="checkbox" id="remember" style="width:16px;height:16px;accent-color:#5D5FEF;cursor:pointer">
+          Remember me
+        </label>
+        <a href="forgot-password.html" style="font-size:13px;font-weight:700;color:#5D5FEF;text-decoration:none">Forgot
+          password?</a>
+      </div>
+
+      <!-- Sign in button -->
+      <button class="login-btn" id="login-btn" onclick="doLogin()">
+        <iconify-icon icon="lucide:log-in" style="font-size:18px"></iconify-icon>
+        Sign In
+      </button>
+
+      <div class="divider">or</div>
+
+      <!-- Register link (student only) -->
+      <div id="register-row" style="text-align:center">
+        <p style="font-size:13px;color:#9CA3AF;margin:0">Don't have an account?
+          <a href="register.html" style="font-weight:700;color:#5D5FEF;text-decoration:none">Register here</a>
+        </p>
+      </div>
+
+      <!-- Admin contact (admin tab) -->
+      <div id="admin-row" style="text-align:center;display:none">
+        <p style="font-size:13px;color:#9CA3AF;margin:0">Admin accounts are provisioned by the institution.<br>
+          <a href="mailto:support@assignhub.edu" style="font-weight:700;color:#5D5FEF;text-decoration:none">Contact IT
+            Support</a>
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    var currentRole = 'student';
+
+    function switchRole(role) {
+      currentRole = role;
+      document.getElementById('tab-student').classList.toggle('active', role === 'student');
+      document.getElementById('tab-admin').classList.toggle('active', role === 'admin');
+
+      var hint = document.getElementById('role-hint-text');
+      var id = document.getElementById('identifier');
+
+      if (role === 'student') {
+        hint.textContent = 'Use your roll number or email to sign in';
+        id.placeholder = 'Roll number or email';
+        document.getElementById('register-row').style.display = '';
+        document.getElementById('admin-row').style.display = 'none';
+      } else {
+        hint.textContent = 'Use your admin email to sign in';
+        id.placeholder = 'Admin email address';
+        document.getElementById('register-row').style.display = 'none';
+        document.getElementById('admin-row').style.display = '';
+      }
+      id.focus();
+    }
+
+    function toggleEye() {
+      var p = document.getElementById('password');
+      var i = document.getElementById('eye-icon');
+      if (p.type === 'password') { p.type = 'text'; i.setAttribute('icon', 'lucide:eye-off'); }
+      else { p.type = 'password'; i.setAttribute('icon', 'lucide:eye'); }
+    }
+
+    async function doLogin() {
+      var identifier = document.getElementById('identifier').value.trim();
+      var pwd = document.getElementById('password').value.trim();
+      var btn = document.getElementById('login-btn');
+
+      if (!identifier || !pwd) { showToast('Please fill in all fields', 'error'); return; }
+
+      btn.disabled = true;
+      btn.innerHTML = '<iconify-icon icon="lucide:loader-2" style="font-size:18px;animation:spin 1s linear infinite"></iconify-icon> Signing in...';
+
+      try {
+        var res = await AHApi.AuthAPI.login(identifier, pwd);
+        if (!res.success) { showToast(res.message || 'Login failed', 'error'); return; }
+        AHApi.Auth.setToken(res.token);
+        AHApi.Auth.setUser(res.user);
+        var role = res.user.role || currentRole;
+        window.location.href = role === 'admin' ? 'admin-dashboard.html' : 'student-dashboard.html';
+      } catch (e) {
+        showToast('Connection error. Try again.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<iconify-icon icon="lucide:log-in" style="font-size:18px"></iconify-icon> Sign In';
+      }
+    }
+
+    // Enter key support
+    document.addEventListener('keydown', function (e) { if (e.key === 'Enter') doLogin(); });
+
+    // Toast
+    function showToast(msg, type) {
+      var t = document.getElementById('ah-toast');
+      if (!t) {
+        t = document.createElement('div');
+        t.id = 'ah-toast';
+        t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);z-index:9999;padding:12px 20px;border-radius:14px;font-family:inherit;font-size:13px;font-weight:700;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,0.18);transition:opacity .3s,transform .3s;opacity:0;white-space:nowrap;display:flex;align-items:center;gap:8px;pointer-events:none';
+        document.body.appendChild(t);
+      }
+      var icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+      var bg = type === 'success' ? '#22c55e' : type === 'error' ? '#ef4444' : '#5D5FEF';
+      t.style.background = bg;
+      t.innerHTML = '<span>' + icon + '</span>' + msg;
+      t.style.opacity = '1'; t.style.transform = 'translateX(-50%) translateY(0)';
+      clearTimeout(t._t);
+      t._t = setTimeout(function () { t.style.opacity = '0'; t.style.transform = 'translateX(-50%) translateY(20px)'; }, 3000);
+    }
+  </script>
+  <style>
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+  </style>
+</body>
+
+</html>

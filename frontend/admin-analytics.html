@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics Overview | AssignHub Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif
+    }
+
+    .sidebar-gradient {
+      background: #131432
+    }
+
+    .card-shadow {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05)
+    }
+
+    .accent-purple {
+      color: #5D5FEF
+    }
+
+    .bg-accent-purple {
+      background-color: #5D5FEF
+    }
+
+    .bg-accent-purple-light {
+      background-color: rgba(93, 95, 239, 0.1)
+    }
+
+    .chart-line-green {
+      stroke: #10B981
+    }
+
+    .chart-line-orange {
+      stroke: #F59E0B
+    }
+
+    .chart-line-red {
+      stroke: #EF4444
+    }
+  </style>
+  <style>
+    sd-component {
+      display: block;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/petite-vue@0.4.1/dist/petite-vue.iife.js" defer init></script>
+  <script src="/api.js"></script>
+
+  <style id="safe-mobile-fixes">
+    /* 2026 Mobile Enhancements */
+    @media (max-width: 768px) {
+
+      html,
+      body {
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+      }
+
+      .sidebar {
+        display: none !important;
+      }
+
+      main,
+      .main-content {
+        margin-left: 0 !important;
+        padding: 16px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding-bottom: 80px !important;
+        /* Bottom nav space */
+      }
+
+      .card {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        margin-bottom: 20px !important;
+      }
+
+      table {
+        display: block !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        width: 100% !important;
+        -webkit-overflow-scrolling: touch !important;
+      }
+
+      input,
+      select,
+      textarea,
+      button,
+      .btn {
+        min-height: 48px !important;
+        font-size: 16px !important;
+      }
+
+      /* Mobile Bottom Navigation */
+      .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border-top: 1px solid #eaeaea;
+        justify-content: space-around;
+        padding: 10px 0;
+        z-index: 9999;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .mobile-bottom-nav a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #64748b;
+        text-decoration: none;
+        font-size: 12px;
+        gap: 4px;
+      }
+
+      .mobile-bottom-nav a.active {
+        color: #6366f1;
+      }
+    }
+
+    @media (min-width: 769px) {
+
+      .mobile-bottom-nav,
+      .mobile-top-bar {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="min-h-screen bg-[#F8F9FC] flex"><!-- component: Sidebar (9f9a9751-b7b0-44c9-8e70-a1fa1ece909e) -->
+    <div
+      v-scope="{ ...{&quot;activeItem&quot;:&quot;analytics&quot;,&quot;dashboardHref&quot;:&quot;admin-dashboard.html&quot;,&quot;registrationsHref&quot;:&quot;admin-registrations.html&quot;,&quot;registrationBadgeCount&quot;:12,&quot;assignmentsHref&quot;:&quot;admin-assignments.html&quot;,&quot;submissionsHref&quot;:&quot;admin-submissions.html&quot;,&quot;studentsHref&quot;:&quot;admin-students.html&quot;,&quot;analyticsHref&quot;:&quot;admin-analytics.html&quot;,&quot;notificationsHref&quot;:&quot;admin-notifications.html&quot;,&quot;settingsHref&quot;:&quot;admin-settings.html&quot;,&quot;logoutHref&quot;:&quot;login.html&quot;}, $emit() {} }">
+      <aside class="w-[260px] bg-[#131432] text-white flex flex-col fixed h-full z-50">
+        <div class="p-8">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-[#5D5FEF] rounded-xl flex items-center justify-center">
+              <iconify-icon icon="lucide:graduation-cap" class="text-2xl text-white"></iconify-icon>
+            </div>
+            <span class="text-xl font-bold tracking-tight">AssignHub</span>
+          </div>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-1">
+          <a :href="dashboardHref" id="nav-dashboard"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'dashboard' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:layout-grid" class="text-xl"></iconify-icon>
+            <span class="font-medium">Dashboard</span>
+          </a>
+          <a :href="registrationsHref" id="nav-registrations"
+            class="flex items-center justify-between px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'registrations' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <div class="flex items-center gap-3">
+              <iconify-icon icon="lucide:user-plus" class="text-xl"></iconify-icon>
+              <span class="font-medium">Registrations</span>
+            </div>
+            <span v-if="registrationBadgeCount > 0"
+              class="bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">
+              {{ registrationBadgeCount }}
+            </span>
+          </a>
+          <a :href="assignmentsHref" id="nav-assignments"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'assignments' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:book-open" class="text-xl"></iconify-icon>
+            <span class="font-medium">Assignments</span>
+          </a>
+          <a :href="submissionsHref" id="nav-submissions"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'submissions' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:send" class="text-xl"></iconify-icon>
+            <span class="font-medium">Submissions</span>
+          </a>
+          <a :href="studentsHref" id="nav-students" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'students' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:users" class="text-xl"></iconify-icon>
+            <span class="font-medium">Students</span>
+          </a>
+          <a :href="analyticsHref" id="nav-analytics"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'analytics' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:bar-chart-3" class="text-xl"></iconify-icon>
+            <span class="font-medium">Analytics</span>
+          </a>
+          <a :href="notificationsHref" id="nav-notifications"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'notifications' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:bell" class="text-xl"></iconify-icon>
+            <span class="font-medium">Notifications</span>
+          </a>
+          <a :href="settingsHref" id="nav-settings" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'settings' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:settings" class="text-xl"></iconify-icon>
+            <span class="font-medium">Settings</span>
+          </a>
+        </nav>
+
+        <div class="p-4 border-t border-white/10">
+          <div class="flex items-center gap-3 px-4 py-4">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Meera" alt="Admin Avatar"
+              class="w-10 h-10 rounded-full bg-gray-200">
+            <div class="flex-1 overflow-hidden">
+              <p class="text-sm font-semibold truncate">Dr. Meera Sharma</p>
+              <p class="text-xs text-gray-400 truncate">Administrator</p>
+            </div>
+          </div>
+          <a :href="logoutHref" id="nav-logout"
+            class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-red-400 transition-all">
+            <iconify-icon icon="lucide:log-out" class="text-xl"></iconify-icon>
+            <span class="font-medium">Logout</span>
+          </a>
+        </div>
+      </aside>
+    </div>
+    <!-- /component: Sidebar (9f9a9751-b7b0-44c9-8e70-a1fa1ece909e) -->
+    <main class="flex-1 ml-[260px] p-8">
+      <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">Analytics Overview</h1>
+          <p class="text-gray-500">Comprehensive platform performance and student engagement metrics</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="flex bg-white border border-gray-200 rounded-xl p-1"><button
+              class="px-4 py-2 text-sm font-semibold text-gray-500 hover:text-gray-900">7 Days</button><button
+              class="px-4 py-2 text-sm font-semibold text-white bg-accent-purple rounded-lg shadow-sm shadow-indigo-100">30
+              Days</button><button
+              class="px-4 py-2 text-sm font-semibold text-gray-500 hover:text-gray-900">Year</button></div><button
+            class="flex items-center gap-2 px-5 py-2.5 bg-white border border-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-all shadow-sm"><iconify-icon
+              icon="lucide:download" class="text-lg"></iconify-icon><span>Export Report</span></button>
+        </div>
+      </header>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-3xl card-shadow border border-gray-50">
+          <p class="text-sm font-medium text-gray-500 mb-2">Completion Rate</p>
+          <div class="flex items-end justify-between">
+            <h3 class="text-3xl font-bold text-gray-900">--</h3><span
+              class="text-xs font-bold text-emerald-500 flex items-center gap-1 mb-1"><iconify-icon
+                icon="lucide:trending-up"></iconify-icon>+12%</span>
+          </div>
+          <div class="mt-4 h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full bg-accent-purple" style="width: 64%"></div>
+          </div>
+          <p class="text-[10px] text-gray-400 mt-2">vs last month</p>
+        </div>
+        <div class="bg-white p-6 rounded-3xl card-shadow border border-gray-50">
+          <p class="text-sm font-medium text-gray-500 mb-2">On-Time Submissions</p>
+          <div class="flex items-end justify-between">
+            <h3 class="text-3xl font-bold text-gray-900">--</h3><span
+              class="text-xs font-bold text-emerald-500 flex items-center gap-1 mb-1"><iconify-icon
+                icon="lucide:trending-up"></iconify-icon>+8%</span>
+          </div>
+          <div class="mt-4 h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full bg-emerald-500" style="width: 78%"></div>
+          </div>
+          <p class="text-[10px] text-gray-400 mt-2">vs last month</p>
+        </div>
+        <div class="bg-white p-6 rounded-3xl card-shadow border border-gray-50">
+          <p class="text-sm font-medium text-gray-500 mb-2">Late Submissions</p>
+          <div class="flex items-end justify-between">
+            <h3 class="text-3xl font-bold text-gray-900">--</h3><span
+              class="text-xs font-bold text-red-500 flex items-center gap-1 mb-1"><iconify-icon
+                icon="lucide:trending-down"></iconify-icon>-5%</span>
+          </div>
+          <div class="mt-4 h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full bg-orange-400" style="width: 22%"></div>
+          </div>
+          <p class="text-[10px] text-gray-400 mt-2">vs last month</p>
+        </div>
+        <div class="bg-white p-6 rounded-3xl card-shadow border border-gray-50">
+          <p class="text-sm font-medium text-gray-500 mb-2">Average Score</p>
+          <div class="flex items-end justify-between">
+            <h3 class="text-3xl font-bold text-gray-900">--</h3><span
+              class="text-xs font-bold text-emerald-500 flex items-center gap-1 mb-1"><iconify-icon
+                icon="lucide:trending-up"></iconify-icon>+10%</span>
+          </div>
+          <div class="mt-4 h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full bg-blue-500" style="width: 85%"></div>
+          </div>
+          <p class="text-[10px] text-gray-400 mt-2">vs last month</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+        <div class="lg:col-span-2 bg-white p-8 rounded-3xl card-shadow border border-gray-50">
+          <div class="flex items-center justify-between mb-8">
+            <div>
+              <h4 class="text-lg font-bold text-gray-900">Submission Trend</h4>
+              <p class="text-xs text-gray-400">Daily submission volume over the last 7 days</p>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="flex items-center gap-2">
+                <div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div><span
+                  class="text-xs font-medium text-gray-500">Submitted</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="w-2.5 h-2.5 rounded-full bg-orange-400"></div><span
+                  class="text-xs font-medium text-gray-500">Pending</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="w-2.5 h-2.5 rounded-full bg-red-400"></div><span
+                  class="text-xs font-medium text-gray-500">Late</span>
+              </div>
+            </div>
+          </div>
+          <div class="relative h-[300px] w-full"></div>
+        </div>
+        <div class="bg-white p-8 rounded-3xl card-shadow border border-gray-50">
+          <div class="flex items-center justify-between mb-8">
+            <div>
+              <h4 class="text-lg font-bold text-gray-900">Top Performing Students</h4>
+              <p class="text-xs text-gray-400">Based on average cumulative scores</p>
+            </div><iconify-icon icon="lucide:more-vertical" class="text-gray-400 cursor-pointer"></iconify-icon>
+          </div>
+          <div class="space-y-6"></div><button
+            class="w-full mt-10 py-3 bg-gray-50 text-gray-600 font-bold rounded-2xl hover:bg-gray-100 transition-all text-xs">View
+            Full Leaderboard</button>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+        <div class="bg-white p-8 rounded-3xl card-shadow border border-gray-50">
+          <h4 class="text-lg font-bold text-gray-900 mb-8">Department Engagement</h4>
+          <div class="space-y-6"></div>
+        </div>
+        <div class="bg-white p-8 rounded-3xl card-shadow border border-gray-50">
+          <h4 class="text-lg font-bold text-gray-900 mb-8">Recent Performance Highlights</h4>
+          <div class="space-y-6"></div>
+        </div>
+      </div>
+  </div>
+  </main>
+  </div>
+  <script>
+    /* AssignHub shared interaction logic */
+    (function () {
+
+      /* ── Toast notification ── */
+      function showToast(msg, type) {
+        var t = document.getElementById('ah-toast');
+        if (!t) {
+          t = document.createElement('div');
+          t.id = 'ah-toast';
+          t.style.cssText = 'position:fixed;bottom:28px;right:28px;z-index:9999;display:flex;align-items:center;gap:10px;padding:14px 22px;border-radius:16px;font-family:inherit;font-size:14px;font-weight:600;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,0.18);transition:opacity .3s,transform .3s;opacity:0;transform:translateY(12px);pointer-events:none;';
+          document.body.appendChild(t);
+        }
+        var icon = type === 'success' ? '✓' : type === 'error' ? '✕' : type === 'warn' ? '⚠' : 'ℹ';
+        var bg = type === 'success' ? '#22c55e' : type === 'error' ? '#ef4444' : type === 'warn' ? '#f59e0b' : '#5D5FEF';
+        t.style.background = bg;
+        t.innerHTML = '<span style="font-size:16px;">' + icon + '</span>' + msg;
+        t.style.opacity = '1'; t.style.transform = 'translateY(0)';
+        clearTimeout(t._timer);
+        t._timer = setTimeout(function () { t.style.opacity = '0'; t.style.transform = 'translateY(12px)'; }, 2800);
+      }
+
+      /* ── Simple confirm modal ── */
+      function showConfirm(title, msg, onYes) {
+        var old = document.getElementById('ah-modal'); if (old) old.remove();
+        var m = document.createElement('div');
+        m.id = 'ah-modal';
+        m.innerHTML = '<div style="position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:10000;display:flex;align-items:center;justify-content:center;">' +
+          '<div style="background:#fff;border-radius:24px;padding:36px 32px;width:360px;box-shadow:0 24px 80px rgba(0,0,0,.2);font-family:inherit;">' +
+          '<h3 style="margin:0 0 10px;font-size:18px;font-weight:800;color:#111;">' + title + '</h3>' +
+          '<p style="margin:0 0 28px;font-size:14px;color:#6b7280;">' + msg + '</p>' +
+          '<div style="display:flex;gap:10px;">' +
+          '<button id="ah-modal-cancel" style="flex:1;padding:12px;background:#f3f4f6;color:#374151;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;">Cancel</button>' +
+          '<button id="ah-modal-ok" style="flex:1;padding:12px;background:#5D5FEF;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;">Confirm</button>' +
+          '</div></div></div>';
+        document.body.appendChild(m);
+        document.getElementById('ah-modal-cancel').onclick = function () { m.remove(); };
+        document.getElementById('ah-modal-ok').onclick = function () { m.remove(); onYes(); };
+        m.firstElementChild.onclick = function (e) { if (e.target === this) m.remove(); };
+      }
+
+      /* expose globals */
+      window.AH = { showToast: showToast, showConfirm: showConfirm };
+    })();
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // Period tabs
+      document.querySelectorAll('button.px-4.py-2').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          this.closest('.flex').querySelectorAll('button').forEach(function (b) {
+            b.className = b.className.replace('text-white bg-accent-purple rounded-lg shadow-sm shadow-indigo-100', 'text-gray-500 hover:text-gray-900');
+          });
+          this.className = this.className.replace('text-gray-500 hover:text-gray-900', 'text-white bg-accent-purple rounded-lg shadow-sm shadow-indigo-100');
+          AH.showToast('Showing ' + this.textContent.trim() + ' data', 'info');
+        });
+      });
+
+      // Export report
+      var exportBtn = null;
+      document.querySelectorAll('button').forEach(function (btn) {
+        if (btn.textContent.includes('Export Report')) exportBtn = btn;
+      });
+
+      if (exportBtn) exportBtn.onclick = async function () {
+        exportBtn.disabled = true;
+        exportBtn.innerHTML = '<iconify-icon icon="lucide:loader-2" class="text-lg animate-spin"></iconify-icon><span>Exporting...</span>';
+        AH.showToast('Generating report export…', 'info');
+        try {
+          var res = await AHApi.AnalyticsAPI.overview();
+          if (!res.success || !res.analytics) throw new Error("Failed to fetch analytics");
+
+          var a = res.analytics;
+          var csv = "AssignHub Analytics Report\\n\\n";
+
+          csv += "OVERVIEW METRICS\\n";
+          csv += "Completion Rate," + a.completion_rate + "%\\n";
+          csv += "On-Time Submissions," + a.on_time_rate + "%\\n";
+          csv += "Late Submissions," + a.late_rate + "%\\n";
+          csv += "Average Score," + a.avg_score + "%\\n\\n";
+
+          if (a.department_engagement && a.department_engagement.length) {
+            csv += "DEPARTMENT ENGAGEMENT\\n";
+            csv += "Department,Active Students,Average Score\\n";
+            a.department_engagement.forEach(function (d) {
+              csv += '"' + d.department + '",' + d.active_students + ',' + d.avg_score + "%\\n";
+            });
+            csv += "\\n";
+          }
+
+          if (a.top_students && a.top_students.length) {
+            csv += "TOP STUDENTS\\n";
+            csv += "Student Name,Average Score\\n";
+            a.top_students.forEach(function (s) {
+              csv += '"' + s.full_name + '",' + s.avg_score + "%\\n";
+            });
+            csv += "\\n";
+          }
+
+          if (a.submission_trend && a.submission_trend.length) {
+            csv += "SUBMISSION TREND\\n";
+            csv += "Date,Submitted,Late\\n";
+            a.submission_trend.forEach(function (t) {
+              var dateStr = new Date(t.day).toLocaleDateString();
+              csv += '"' + dateStr + '",' + (t.submitted || 0) + ',' + (t.late || 0) + "\\n";
+            });
+          }
+
+          var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+          var url = window.URL.createObjectURL(blob);
+          var link = document.createElement("a");
+          link.setAttribute("href", url);
+          link.setAttribute("download", "AssignHub_Analytics_" + new Date().toISOString().split('T')[0] + ".csv");
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+
+          AH.showToast('Report exported successfully!', 'success');
+        } catch (err) {
+          AH.showToast('Export failed: ' + err.message, 'error');
+        } finally {
+          exportBtn.disabled = false;
+          exportBtn.innerHTML = '<iconify-icon icon="lucide:download" class="text-lg"></iconify-icon><span>Export Report</span>';
+        }
+      };
+
+      // Load more submissions -> View All Students
+      var moreBtn = document.querySelector('button.w-full.mt-10');
+      if (moreBtn) {
+        moreBtn.textContent = 'View All Students';
+        moreBtn.onclick = function () { window.location.href = 'admin-students.html'; };
+      }
+    });
+
+    // Admin analytics - load real analytics data
+    document.addEventListener('DOMContentLoaded', async function () {
+      if (!AHApi.guardAdmin()) return;
+      var logoutLink = document.getElementById('nav-logout');
+      if (logoutLink) logoutLink.addEventListener('click', function (e) { e.preventDefault(); AHApi.Auth.logout(); });
+      try {
+        var res = await AHApi.AnalyticsAPI.overview();
+        if (res.success && res.analytics) {
+          var a = res.analytics;
+
+          // Top Cards
+          var cards = document.querySelectorAll('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4 > div');
+          if (cards.length >= 4) {
+            cards[0].querySelector('h3').textContent = a.completion_rate + '%';
+            cards[0].querySelector('.bg-accent-purple').style.width = a.completion_rate + '%';
+            var trend1 = cards[0].querySelector('span.text-xs');
+            if (trend1) trend1.innerHTML = '<iconify-icon icon="lucide:activity"></iconify-icon>Live';
+            var vs1 = cards[0].querySelector('p.text-\\[10px\\]');
+            if (vs1) vs1.textContent = 'Current Status';
+
+            cards[1].querySelector('h3').textContent = a.on_time_rate + '%';
+            cards[1].querySelector('.bg-emerald-500').style.width = a.on_time_rate + '%';
+            var trend2 = cards[1].querySelector('span.text-xs');
+            if (trend2) trend2.innerHTML = '<iconify-icon icon="lucide:activity"></iconify-icon>Live';
+            var vs2 = cards[1].querySelector('p.text-\\[10px\\]');
+            if (vs2) vs2.textContent = 'Current Status';
+
+            cards[2].querySelector('h3').textContent = a.late_rate + '%';
+            cards[2].querySelector('.bg-orange-400').style.width = a.late_rate + '%';
+            var trend3 = cards[2].querySelector('span.text-xs');
+            if (trend3) trend3.innerHTML = '<iconify-icon icon="lucide:activity"></iconify-icon>Live';
+            var vs3 = cards[2].querySelector('p.text-\\[10px\\]');
+            if (vs3) vs3.textContent = 'Current Status';
+
+            cards[3].querySelector('h3').textContent = a.avg_score + '%';
+            cards[3].querySelector('.bg-blue-500').style.width = a.avg_score + '%';
+            var trend4 = cards[3].querySelector('span.text-xs');
+            if (trend4) trend4.innerHTML = '<iconify-icon icon="lucide:activity"></iconify-icon>Live';
+            var vs4 = cards[3].querySelector('p.text-\\[10px\\]');
+            if (vs4) vs4.textContent = 'Current Status';
+          }
+
+          // Submission Trend Chart
+          var svgContainer = document.querySelector('.relative.h-\\[300px\\].w-full');
+          if (svgContainer && a.submission_trend) {
+            if (a.submission_trend.length === 0 && false) {
+              svgContainer.innerHTML = '<div class="flex items-center justify-center h-full"><p class="text-sm text-gray-400">No trend data available for the last 7 days.</p></div>';
+            } else {
+              // Normalize to always show exactly 7 days
+              var trendData = [];
+              for (var j = 6; j >= 0; j--) {
+                var d = new Date();
+                d.setDate(d.getDate() - j);
+
+                var found = a.submission_trend.find(t => {
+                  var tDate = new Date(t.day);
+                  return tDate.getDate() === d.getDate() && tDate.getMonth() === d.getMonth() && tDate.getFullYear() === d.getFullYear();
+                });
+
+                if (found) {
+                  trendData.push({ day: d, submitted: found.submitted, late: found.late });
+                } else {
+                  trendData.push({ day: d, submitted: 0, late: 0 });
+                }
+              }
+
+              var maxVal = Math.max(10, ...trendData.map(t => Math.max(parseInt(t.submitted) || 0, parseInt(t.late) || 0)));
+              var greenPath = '';
+              var orangePath = '';
+              var textLabels = '';
+              var numPoints = trendData.length;
+              var width = 1000;
+              var height = 270;
+
+              trendData.forEach((t, i) => {
+                var x = numPoints === 1 ? width / 2 : (i / (numPoints - 1)) * width;
+                var subY = height - ((parseInt(t.submitted) || 0) / maxVal) * (height - 30);
+                var lateY = height - ((parseInt(t.late) || 0) / maxVal) * (height - 30);
+
+                if (i === 0) {
+                  greenPath += `M${x},${subY} `;
+                  orangePath += `M${x},${lateY} `;
+                } else {
+                  greenPath += `L${x},${subY} `;
+                  orangePath += `L${x},${lateY} `;
+                }
+
+                var dateStr = new Date(t.day).toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+                var anchor = i === 0 ? 'start' : (i === numPoints - 1 ? 'end' : 'middle');
+                textLabels += `<text x="${x}" y="320" text-anchor="${anchor}">${dateStr}</text>`;
+              });
+
+              svgContainer.innerHTML = `
+              <svg class="w-full h-full overflow-visible" viewBox="0 0 1000 300">
+                <path d="${greenPath}" fill="none" stroke="#10B981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="${orangePath}" fill="none" stroke="#F59E0B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+                <g class="text-[12px] font-medium text-gray-400">${textLabels}</g>
+                <g class="text-[10px] font-medium text-gray-300" text-anchor="end">
+                  <text x="-10" y="30">${maxVal}</text>
+                  <text x="-10" y="150">${Math.round(maxVal / 2)}</text>
+                  <text x="-10" y="270">0</text>
+                </g>
+                <line x1="0" y1="30" x2="1000" y2="30" stroke="#F1F5F9" stroke-dasharray="4"></line>
+                <line x1="0" y1="150" x2="1000" y2="150" stroke="#F1F5F9" stroke-dasharray="4"></line>
+                <line x1="0" y1="270" x2="1000" y2="270" stroke="#F1F5F9" stroke-dasharray="4"></line>
+              </svg>
+            `;
+            }
+          }
+
+          // Top Students
+          var topStudentsContainer = document.querySelector('.bg-white.p-8.rounded-3xl.card-shadow .space-y-6');
+          if (topStudentsContainer && a.top_students) {
+            topStudentsContainer.innerHTML = '';
+            if (a.top_students.length === 0) {
+              topStudentsContainer.innerHTML = '<p class="text-sm text-gray-500 text-center py-4">No data available.</p>';
+            } else {
+              a.top_students.forEach((u, i) => {
+                var div = document.createElement('div');
+                div.className = 'flex items-center justify-between';
+                div.innerHTML = `
+                 <div class="flex items-center gap-3">
+                   <span class="text-xs font-bold text-gray-400">${i + 1}</span>
+                   <img src="${AHApi.avatarUrl(u.avatar_seed || u.full_name)}" class="w-8 h-8 rounded-full bg-indigo-50">
+                   <div class="flex flex-col"><span class="text-sm font-bold text-gray-900">${u.full_name || 'Student'}</span></div>
+                 </div>
+                 <div class="flex items-center gap-3 flex-1 justify-end ml-4">
+                   <div class="w-24 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                     <div class="h-full bg-accent-purple" style="width: ${Math.round(u.avg_score)}%"></div>
+                   </div>
+                   <span class="text-xs font-bold text-gray-900 w-8">${u.avg_score}%</span>
+                 </div>
+               `;
+                topStudentsContainer.appendChild(div);
+              });
+            }
+          }
+
+          // Department Engagement
+          var spaceY6Containers = document.querySelectorAll('.bg-white.p-8.rounded-3xl.card-shadow .space-y-6');
+          var deptContainer = spaceY6Containers[1];
+          if (deptContainer && a.department_engagement) {
+            deptContainer.innerHTML = '';
+            if (a.department_engagement.length === 0) {
+              deptContainer.innerHTML = '<p class="text-sm text-gray-500 text-center py-4">No data available.</p>';
+            } else {
+              var colors = ['bg-accent-purple', 'bg-blue-500', 'bg-orange-400', 'bg-emerald-500', 'bg-pink-500'];
+              a.department_engagement.forEach((d, i) => {
+                var colorClass = colors[i % colors.length];
+                var textClass = d.avg_score > 80 ? 'text-emerald-500' : d.avg_score > 60 ? 'text-orange-400' : 'text-red-500';
+                var levelText = d.avg_score > 80 ? 'High' : d.avg_score > 60 ? 'Moderate' : 'Low';
+                var div = document.createElement('div');
+                var deptName = d.department && d.department.trim() !== '' ? d.department : 'General / Unassigned';
+                div.innerHTML = `
+                  <div class="flex items-center justify-between mb-2">
+                    <div>
+                      <p class="text-sm font-bold text-gray-900">${deptName}</p>
+                      <p class="text-xs text-gray-400">${d.active_students} Active Students</p>
+                   </div>
+                   <div class="text-right">
+                     <p class="text-sm font-bold text-gray-900">${d.avg_score}%</p>
+                     <p class="text-xs ${textClass} font-bold">${levelText}</p>
+                   </div>
+                 </div>
+                 <div class="h-2 w-full bg-gray-100 rounded-full overflow-hidden mb-6">
+                   <div class="h-full ${colorClass}" style="width: ${Math.round(d.avg_score)}%"></div>
+                 </div>
+               `;
+                deptContainer.appendChild(div);
+              });
+            }
+          }
+
+          // Recent Performance Highlights
+          var hlContainer = spaceY6Containers[2];
+          if (hlContainer) {
+            var h1 = a.top_students && a.top_students.length > 0
+              ? { title: `Top Student: ${a.top_students[0].full_name}`, desc: `Achieved highest average score of ${a.top_students[0].avg_score}%`, color: 'emerald', icon: 'lucide:award' }
+              : { title: 'No Student Data', desc: 'Awaiting first submissions.', color: 'gray', icon: 'lucide:user' };
+
+            var h2 = a.department_engagement && a.department_engagement.length > 0
+              ? { title: `Most Active: ${a.department_engagement[0].department}`, desc: `Leading with ${a.department_engagement[0].avg_score}% average score.`, color: 'blue', icon: 'lucide:users' }
+              : { title: 'No Department Data', desc: 'Awaiting engagement metrics.', color: 'gray', icon: 'lucide:building' };
+
+            var h3 = a.submission_trend && a.submission_trend.length > 0
+              ? { title: 'Live Trend Tracking', desc: `Analyzed ${a.submission_trend.length} days of submission history.`, color: 'indigo', icon: 'lucide:activity' }
+              : { title: 'No Trend Data', desc: 'Awaiting recent submission activity.', color: 'gray', icon: 'lucide:bar-chart' };
+
+            var colorMap = {
+              emerald: { bg: 'bg-emerald-50/50', border: 'border-emerald-100/50', text: 'text-emerald-600' },
+              blue: { bg: 'bg-blue-50/50', border: 'border-blue-100/50', text: 'text-blue-600' },
+              indigo: { bg: 'bg-indigo-50/50', border: 'border-indigo-100/50', text: 'text-indigo-600' },
+              gray: { bg: 'bg-gray-50/50', border: 'border-gray-100/50', text: 'text-gray-600' },
+            };
+
+            hlContainer.innerHTML = `
+           <div class="flex gap-4 p-4 rounded-2xl ${colorMap[h1.color].bg} border ${colorMap[h1.color].border}">
+             <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center ${colorMap[h1.color].text} shadow-sm"><iconify-icon icon="${h1.icon}" class="text-xl"></iconify-icon></div>
+             <div><p class="text-sm font-bold text-gray-900">${h1.title}</p><p class="text-xs text-gray-500">${h1.desc}</p></div>
+           </div>
+           <div class="flex gap-4 p-4 rounded-2xl ${colorMap[h2.color].bg} border ${colorMap[h2.color].border}">
+             <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center ${colorMap[h2.color].text} shadow-sm"><iconify-icon icon="${h2.icon}" class="text-xl"></iconify-icon></div>
+             <div><p class="text-sm font-bold text-gray-900">${h2.title}</p><p class="text-xs text-gray-500">${h2.desc}</p></div>
+           </div>
+           <div class="flex gap-4 p-4 rounded-2xl ${colorMap[h3.color].bg} border ${colorMap[h3.color].border}">
+             <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center ${colorMap[h3.color].text} shadow-sm"><iconify-icon icon="${h3.icon}" class="text-xl"></iconify-icon></div>
+             <div><p class="text-sm font-bold text-gray-900">${h3.title}</p><p class="text-xs text-gray-500">${h3.desc}</p></div>
+           </div>
+         `;
+          }
+        }
+      } catch (e) { }
+    });
+
+  </script>
+</body>
+
+</html>

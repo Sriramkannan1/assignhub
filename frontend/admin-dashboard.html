@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AssignHub Admin Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .sidebar-gradient {
+      background: #131432;
+    }
+
+    .card-shadow {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .accent-purple {
+      color: #5D5FEF;
+    }
+
+    .bg-accent-purple {
+      background-color: #5D5FEF;
+    }
+
+    .bg-accent-purple-light {
+      background-color: rgba(93, 95, 239, 0.1);
+    }
+
+    .progress-circle {
+      background: conic-gradient(#5D5FEF 0% 64%,
+          #FFB800 64% 90%,
+          #FF4D4D 90% 100%);
+    }
+  </style>
+  <script src="/api.js"></script>
+
+  <style id="safe-mobile-fixes">
+    /* 2026 Mobile Enhancements */
+    @media (max-width: 768px) {
+
+      html,
+      body {
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+      }
+
+      aside {
+        display: none !important;
+      }
+
+      main,
+      main {
+        margin-left: 0 !important;
+        padding: 16px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding-bottom: 80px !important;
+        /* Bottom nav space */
+      }
+
+      .card {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        margin-bottom: 20px !important;
+      }
+
+      table {
+        display: block !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        width: 100% !important;
+        -webkit-overflow-scrolling: touch !important;
+      }
+
+      input,
+      select,
+      textarea,
+      button,
+      .btn {
+        min-height: 48px !important;
+        font-size: 16px !important;
+      }
+
+      /* Mobile Bottom Navigation */
+      .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border-top: 1px solid #eaeaea;
+        justify-content: space-around;
+        padding: 10px 0;
+        z-index: 9999;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .mobile-bottom-nav a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #64748b;
+        text-decoration: none;
+        font-size: 12px;
+        gap: 4px;
+      }
+
+      .mobile-bottom-nav a.active {
+        color: #6366f1;
+      }
+    }
+
+    @media (min-width: 769px) {
+
+      .mobile-bottom-nav,
+      .mobile-top-bar {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="min-h-screen bg-[#F8F9FC] flex">
+    <!-- Sidebar -->
+    <aside class="w-[260px] sidebar-gradient text-white flex flex-col fixed h-full z-50">
+      <div class="p-8">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-accent-purple rounded-xl flex items-center justify-center">
+            <iconify-icon icon="lucide:graduation-cap" class="text-2xl text-white"></iconify-icon>
+          </div>
+          <span class="text-xl font-bold tracking-tight">AssignHub</span>
+        </div>
+      </div>
+
+      <nav class="flex-1 px-4 space-y-1">
+        <a href="admin-dashboard.html" id="nav-dashboard"
+          class="flex items-center gap-3 px-4 py-3 bg-accent-purple rounded-xl text-white transition-all">
+          <iconify-icon icon="lucide:layout-grid" class="text-xl"></iconify-icon>
+          <span class="font-medium">Dashboard</span>
+        </a>
+        <a href="admin-registrations.html" id="nav-registrations"
+          class="flex items-center justify-between px-4 py-3 text-gray-400 hover:bg-white/5 hover:text-white rounded-xl transition-all">
+          <div class="flex items-center gap-3">
+            <iconify-icon icon="lucide:user-plus" class="text-xl"></iconify-icon>
+            <span class="font-medium">Registrations</span>
+          </div>
+          <span class="bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">12</span>
+        </a>
+        <a href="admin-assignments.html" id="nav-assignments"
+          class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-white/5 hover:text-white rounded-xl transition-all">
+          <iconify-icon icon="lucide:book-open" class="text-xl"></iconify-icon>
+          <span class="font-medium">Assignments</span>
+        </a>
+        <a href="admin-submissions.html" id="nav-submissions"
+          class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-white/5 hover:text-white rounded-xl transition-all">
+          <iconify-icon icon="lucide:send" class="text-xl"></iconify-icon>
+          <span class="font-medium">Submissions</span>
+        </a>
+        <a href="admin-students.html" id="nav-students"
+          class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-white/5 hover:text-white rounded-xl transition-all">
+          <iconify-icon icon="lucide:users" class="text-xl"></iconify-icon>
+          <span class="font-medium">Students</span>
+        </a>
+        <a href="admin-analytics.html" id="nav-analytics"
+          class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-white/5 hover:text-white rounded-xl transition-all">
+          <iconify-icon icon="lucide:bar-chart-3" class="text-xl"></iconify-icon>
+          <span class="font-medium">Analytics</span>
+        </a>
+        <a href="admin-notifications.html" id="nav-notifications"
+          class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-white/5 hover:text-white rounded-xl transition-all">
+          <iconify-icon icon="lucide:bell" class="text-xl"></iconify-icon>
+          <span class="font-medium">Notifications</span>
+        </a>
+        <a href="admin-settings.html" id="nav-settings"
+          class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-white/5 hover:text-white rounded-xl transition-all">
+          <iconify-icon icon="lucide:settings" class="text-xl"></iconify-icon>
+          <span class="font-medium">Settings</span>
+        </a>
+      </nav>
+
+      <div class="p-4 border-t border-white/10">
+        <div class="flex items-center gap-3 px-4 py-4">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Meera" alt="Admin Avatar"
+            class="w-10 h-10 rounded-full bg-gray-200">
+          <div class="flex-1 overflow-hidden">
+            <p class="text-sm font-semibold truncate">Dr. Meera Sharma</p>
+            <p class="text-xs text-gray-400 truncate">Administrator</p>
+          </div>
+        </div>
+        <a href="login.html" id="nav-logout"
+          class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-red-400 transition-all">
+          <iconify-icon icon="lucide:log-out" class="text-xl"></iconify-icon>
+          <span class="font-medium">Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 ml-[260px] p-8">
+      <!-- Header -->
+      <header class="flex items-center justify-between mb-8">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
+          <p class="text-gray-500">Welcome back, Dr. Meera Sharma</p>
+        </div>
+        <div class="flex items-center gap-4">
+          <button
+            class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-gray-200 text-gray-600 hover:bg-gray-50">
+            <iconify-icon icon="lucide:bell" class="text-xl"></iconify-icon>
+          </button>
+          <button
+            class="flex items-center gap-2 px-6 py-2.5 bg-accent-purple text-white font-semibold rounded-xl hover:opacity-90 shadow-lg shadow-indigo-200 transition-all">
+            <iconify-icon icon="lucide:upload-cloud" class="text-xl"></iconify-icon>
+            <span>Upload Assignment</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Stats Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-3xl card-shadow border border-gray-50 flex items-start justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-500 mb-1">Total Students</p>
+            <h3 class="text-2xl font-bold text-gray-900">1,248</h3>
+            <p class="text-xs font-medium text-emerald-500 mt-2 flex items-center gap-1">
+              <iconify-icon icon="lucide:trending-up"></iconify-icon>
+              +12% <span class="text-gray-400 font-normal">vs last month</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center">
+            <iconify-icon icon="lucide:users-2" class="text-2xl"></iconify-icon>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-3xl card-shadow border border-gray-50 flex items-start justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-500 mb-1">Approved Students</p>
+            <h3 class="text-2xl font-bold text-gray-900">956</h3>
+            <p class="text-xs font-medium text-emerald-500 mt-2 flex items-center gap-1">
+              <iconify-icon icon="lucide:trending-up"></iconify-icon>
+              +8% <span class="text-gray-400 font-normal">vs last month</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center">
+            <iconify-icon icon="lucide:check-circle" class="text-2xl"></iconify-icon>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-3xl card-shadow border border-gray-50 flex items-start justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-500 mb-1">Pending Approvals</p>
+            <h3 class="text-2xl font-bold text-gray-900">12</h3>
+            <p class="text-xs font-medium text-red-500 mt-2 flex items-center gap-1">
+              <iconify-icon icon="lucide:trending-down"></iconify-icon>
+              -5% <span class="text-gray-400 font-normal">vs last month</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center">
+            <iconify-icon icon="lucide:clock" class="text-2xl"></iconify-icon>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-3xl card-shadow border border-gray-50 flex items-start justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-500 mb-1">Total Assignments</p>
+            <h3 class="text-2xl font-bold text-gray-900">34</h3>
+            <p class="text-xs font-medium text-emerald-500 mt-2 flex items-center gap-1">
+              <iconify-icon icon="lucide:plus-circle"></iconify-icon>
+              +4 <span class="text-gray-400 font-normal">vs last month</span>
+            </p>
+          </div>
+          <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center">
+            <iconify-icon icon="lucide:file-text" class="text-2xl"></iconify-icon>
+          </div>
+        </div>
+      </div>
+
+      <!-- Middle Section: Submission Overview & Recent Submissions -->
+      <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-8">
+        <!-- Submission Overview Chart -->
+        <div class="bg-white p-8 rounded-3xl card-shadow border border-gray-50 flex flex-col items-center">
+          <div class="w-full flex justify-between items-start mb-8">
+            <h4 class="font-bold text-gray-900">Submission Overview</h4>
+            <iconify-icon icon="lucide:more-vertical" class="text-gray-400 cursor-pointer"></iconify-icon>
+          </div>
+          <div class="relative w-48 h-48">
+            <div class="progress-circle w-full h-full rounded-full"></div>
+            <div class="absolute inset-4 bg-white rounded-full flex flex-col items-center justify-center">
+              <span class="text-3xl font-bold text-gray-900">64%</span>
+              <span class="text-xs text-gray-500">Completion Rate</span>
+            </div>
+          </div>
+          <div class="w-full mt-10 space-y-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-3 h-3 rounded-full bg-accent-purple"></div>
+                <span class="text-sm text-gray-600">Submitted</span>
+              </div>
+              <span class="text-sm font-bold text-gray-900">798 (64%)</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-3 h-3 rounded-full bg-orange-400"></div>
+                <span class="text-sm text-gray-600">Pending</span>
+              </div>
+              <span class="text-sm font-bold text-gray-900">320 (26%)</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                <span class="text-sm text-gray-600">Late</span>
+              </div>
+              <span class="text-sm font-bold text-gray-900">130 (10%)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Submissions Table -->
+        <div class="xl:col-span-2 bg-white p-8 rounded-3xl card-shadow border border-gray-50">
+          <div class="flex items-center justify-between mb-8">
+            <h4 class="font-bold text-gray-900">Recent Submissions</h4>
+            <a href="admin-submissions.html" id="view-all-submissions"
+              class="text-accent-purple text-sm font-semibold hover:underline">View All</a>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left">
+              <thead>
+                <tr class="text-gray-400 text-xs font-semibold uppercase tracking-wider">
+                  <th class="pb-4">Student</th>
+                  <th class="pb-4">Assignment</th>
+                  <th class="pb-4">Status</th>
+                  <th class="pb-4">Submitted At</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-50">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Grid: Pending Approvals & Upcoming Deadlines -->
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+        <!-- Pending Approvals -->
+        <div class="bg-white p-8 rounded-3xl card-shadow border border-gray-50">
+          <div class="flex items-center justify-between mb-8">
+            <h4 class="font-bold text-gray-900">Pending Approvals</h4>
+            <a href="admin-registrations.html" id="view-all-approvals"
+              class="text-accent-purple text-sm font-semibold hover:underline">View All</a>
+          </div>
+          <div class="space-y-6">
+          </div>
+        </div>
+
+        <!-- Upcoming Deadlines -->
+        <div class="bg-white p-8 rounded-3xl card-shadow border border-gray-50">
+          <div class="flex items-center justify-between mb-8">
+            <h4 class="font-bold text-gray-900">Upcoming Deadlines</h4>
+            <a href="admin-assignments.html" id="view-all-deadlines"
+              class="text-accent-purple text-sm font-semibold hover:underline">View All</a>
+          </div>
+          <div class="space-y-6">
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script>
+    /* AssignHub shared interaction logic */
+    (function () {
+
+      /* ── Toast notification ── */
+      function showToast(msg, type) {
+        var t = document.getElementById('ah-toast');
+        if (!t) {
+          t = document.createElement('div');
+          t.id = 'ah-toast';
+          t.style.cssText = 'position:fixed;bottom:28px;right:28px;z-index:9999;display:flex;align-items:center;gap:10px;padding:14px 22px;border-radius:16px;font-family:inherit;font-size:14px;font-weight:600;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,0.18);transition:opacity .3s,transform .3s;opacity:0;transform:translateY(12px);pointer-events:none;';
+          document.body.appendChild(t);
+        }
+        var icon = type === 'success' ? '✓' : type === 'error' ? '✕' : type === 'warn' ? '⚠' : 'ℹ';
+        var bg = type === 'success' ? '#22c55e' : type === 'error' ? '#ef4444' : type === 'warn' ? '#f59e0b' : '#5D5FEF';
+        t.style.background = bg;
+        t.innerHTML = '<span style="font-size:16px;">' + icon + '</span>' + msg;
+        t.style.opacity = '1'; t.style.transform = 'translateY(0)';
+        clearTimeout(t._timer);
+        t._timer = setTimeout(function () { t.style.opacity = '0'; t.style.transform = 'translateY(12px)'; }, 2800);
+      }
+
+      /* ── Simple confirm modal ── */
+      function showConfirm(title, msg, onYes) {
+        var old = document.getElementById('ah-modal'); if (old) old.remove();
+        var m = document.createElement('div');
+        m.id = 'ah-modal';
+        m.innerHTML = '<div style="position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:10000;display:flex;align-items:center;justify-content:center;">' +
+          '<div style="background:#fff;border-radius:24px;padding:36px 32px;width:360px;box-shadow:0 24px 80px rgba(0,0,0,.2);font-family:inherit;">' +
+          '<h3 style="margin:0 0 10px;font-size:18px;font-weight:800;color:#111;">' + title + '</h3>' +
+          '<p style="margin:0 0 28px;font-size:14px;color:#6b7280;">' + msg + '</p>' +
+          '<div style="display:flex;gap:10px;">' +
+          '<button id="ah-modal-cancel" style="flex:1;padding:12px;background:#f3f4f6;color:#374151;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;">Cancel</button>' +
+          '<button id="ah-modal-ok" style="flex:1;padding:12px;background:#5D5FEF;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;">Confirm</button>' +
+          '</div></div></div>';
+        document.body.appendChild(m);
+        document.getElementById('ah-modal-cancel').onclick = function () { m.remove(); };
+        document.getElementById('ah-modal-ok').onclick = function () { m.remove(); onYes(); };
+        m.firstElementChild.onclick = function (e) { if (e.target === this) m.remove(); };
+      }
+
+      /* expose globals */
+      window.AH = { showToast: showToast, showConfirm: showConfirm };
+    })();
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // header search btn -> focus search
+      var searchBtn = document.querySelector('button .iconify-icon[icon="lucide:search"], button iconify-icon[icon="lucide:search"]');
+      // approve/reject quick action buttons
+      document.querySelectorAll('.bg-emerald-50.text-emerald-600').forEach(function (btn) {
+        btn.addEventListener('click', function () { AH.showToast('Student approved successfully', 'success'); this.closest('tr, [class*=flex]') && this.parentElement && (this.parentElement.style.opacity = '.4'); });
+      });
+      document.querySelectorAll('.bg-red-50.text-red-600').forEach(function (btn) {
+        btn.addEventListener('click', function () { AH.showToast('Registration rejected', 'warn'); this.parentElement && (this.parentElement.style.opacity = '.4'); });
+      });
+      // header CTA button
+      var cta = document.querySelector('button.bg-accent-purple');
+      if (cta) cta.onclick = function () { window.location.href = 'admin-assignments.html'; };
+    });
+
+    // Admin dashboard - load real stats
+    document.addEventListener('DOMContentLoaded', async function () {
+      if (!AHApi.guardAdmin()) return;
+      var user = AHApi.Auth.getUser();
+      if (user) {
+        document.querySelectorAll('p.text-sm.font-semibold.truncate').forEach(function (el, i) { if (i === 0) el.textContent = user.full_name || 'Admin'; });
+        document.querySelector('header p.text-gray-500') && (document.querySelector('header p.text-gray-500').textContent = 'Welcome back, ' + user.full_name);
+      }
+      try {
+        var res = await AHApi.UsersAPI.stats();
+        if (res.success) {
+          var s = res.stats;
+          var cards = document.querySelectorAll('.grid.grid-cols-1.md\\:grid-cols-2.xl\\:grid-cols-4 h3');
+          if (cards[0]) cards[0].textContent = s.total_students.toLocaleString();
+          if (cards[1]) cards[1].textContent = s.active_students.toLocaleString();
+          if (cards[2]) cards[2].textContent = s.pending_approvals;
+          if (cards[3]) cards[3].textContent = s.total_assignments;
+
+          var chartText = document.querySelector('.relative.w-48.h-48 .text-3xl');
+          if (chartText) chartText.textContent = s.completion_rate + '%';
+
+          var legendValues = document.querySelectorAll('.w-full.mt-10.space-y-4 .text-sm.font-bold.text-gray-900');
+          if (legendValues.length >= 3) {
+            var expected = s.active_students * s.total_assignments;
+            expected = expected === 0 ? 1 : expected;
+
+            var submittedNum = s.total_submissions || 0;
+            var lateNum = s.late_submissions || 0;
+            var pendingNum = Math.max(0, expected - submittedNum); // late is a subset of submitted or counted separately, but we assume pending is expected - submitted
+
+            var subPct = Math.round((submittedNum / expected) * 100);
+            var penPct = Math.round((pendingNum / expected) * 100);
+            var latePct = Math.round((lateNum / expected) * 100);
+
+            legendValues[0].textContent = submittedNum + ' (' + subPct + '%)';
+            legendValues[1].textContent = pendingNum + ' (' + penPct + '%)';
+            legendValues[2].textContent = lateNum + ' (' + latePct + '%)';
+
+            var circle = document.querySelector('.progress-circle');
+            if (circle) {
+              circle.style.background = 'conic-gradient(#6366f1 0% ' + subPct + '%, #fb923c ' + subPct + '% ' + (subPct + penPct) + '%, #f87171 ' + (subPct + penPct) + '% 100%)';
+            }
+          }
+        }
+      } catch (e) { }
+
+      // Recent Submissions
+      try {
+        var subRes = await AHApi.SubmissionsAPI.list({ limit: 4 });
+        if (subRes.success && subRes.submissions) {
+          var tbody = document.querySelector('.overflow-x-auto table tbody');
+          if (tbody) {
+            tbody.innerHTML = '';
+            if (subRes.submissions.length === 0) {
+              tbody.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-sm text-gray-500">No recent submissions</td></tr>';
+            } else {
+              subRes.submissions.forEach(function (sub) {
+                var tr = document.createElement('tr');
+                tr.className = 'group';
+                var statusClass = sub.status === 'late' ? 'bg-red-50 text-red-600' : (sub.status === 'graded' ? 'bg-blue-50 text-blue-600' : 'bg-emerald-50 text-emerald-600');
+                var statusText = sub.status.charAt(0).toUpperCase() + sub.status.slice(1);
+                tr.innerHTML = '<td class="py-4"><div class="flex items-center gap-3"><img src="' + AHApi.avatarUrl(sub.student_avatar || sub.student_name) + '" class="w-8 h-8 rounded-full bg-gray-100"><span class="text-sm font-semibold text-gray-900">' + (sub.student_name || 'Student') + '</span></div></td><td class="py-4 text-sm text-gray-600">' + (sub.assignment_title || 'Assignment') + '</td><td class="py-4"><span class="px-3 py-1 text-xs font-semibold rounded-full ' + statusClass + '">' + statusText + '</span></td><td class="py-4 text-sm text-gray-500">' + AHApi.formatDate(sub.submitted_at, { hour: 'numeric', minute: 'numeric' }) + '</td>';
+                tbody.appendChild(tr);
+              });
+            }
+          }
+        }
+      } catch (e) { }
+
+      // Upcoming Deadlines
+      try {
+        var assignRes = await AHApi.AssignmentsAPI.list({ status: 'active', limit: 3 });
+        if (assignRes.success && assignRes.assignments) {
+          var viewAllDeadlines = document.getElementById('view-all-deadlines');
+          var deadlinesContainer = viewAllDeadlines ? viewAllDeadlines.parentElement.nextElementSibling : null;
+          if (deadlinesContainer) {
+            deadlinesContainer.innerHTML = '';
+            if (assignRes.assignments.length === 0) {
+              deadlinesContainer.innerHTML = '<p class="text-sm text-gray-500 text-center py-4">No upcoming deadlines.</p>';
+            } else {
+              assignRes.assignments.slice(0, 3).forEach(function (a) {
+                var div = document.createElement('div');
+                div.className = 'flex items-center justify-between';
+                var daysStr = AHApi.daysLeft(a.deadline);
+                var colorClass = daysStr.includes('Expired') ? 'red' : daysStr.includes('Today') ? 'orange' : 'indigo';
+                div.innerHTML = '<div class="flex items-center gap-4"><div class="w-10 h-10 bg-' + colorClass + '-50 text-' + colorClass + '-500 rounded-xl flex items-center justify-center"><iconify-icon icon="lucide:book-open" class="text-xl"></iconify-icon></div><div><p class="text-sm font-bold text-gray-900">' + a.title + '</p><p class="text-xs text-gray-500">Due: ' + AHApi.formatDate(a.deadline, { hour: 'numeric', minute: 'numeric' }) + '</p></div></div><span class="text-xs font-bold text-' + colorClass + '-500 px-3 py-1 bg-' + colorClass + '-50 rounded-full">' + daysStr + '</span>';
+                deadlinesContainer.appendChild(div);
+              });
+            }
+          }
+        }
+      } catch (e) { }
+
+      // Load pending approvals
+      try {
+        var prRes = await AHApi.UsersAPI.pendingRegistrations();
+        var usersList = prRes.users || prRes.registrations;
+        if (prRes.success && usersList) {
+          var badge = document.querySelector('#nav-registrations span.bg-red-500');
+          if (badge) {
+            if (usersList.length > 0) {
+              badge.style.display = 'inline-block';
+              badge.textContent = usersList.length;
+            } else {
+              badge.style.display = 'none';
+            }
+          }
+
+          var viewAllA = document.getElementById('view-all-approvals');
+          if (viewAllA) {
+            var listContainer = viewAllA.parentElement.nextElementSibling;
+            if (listContainer) {
+              listContainer.innerHTML = '';
+              if (usersList.length === 0) {
+                listContainer.innerHTML = '<p class="text-sm text-gray-500 text-center py-4">No pending approvals.</p>';
+              } else {
+                usersList.slice(0, 4).forEach(function (u) {
+                  var div = document.createElement('div');
+                  div.className = 'flex items-center justify-between';
+                  div.innerHTML = '<div class="flex items-center gap-4"><img src="' + AHApi.avatarUrl(u.avatar_seed || u.full_name) + '" class="w-10 h-10 rounded-full bg-gray-100"><div><p class="text-sm font-bold text-gray-900">' + (u.full_name || '') + '</p><p class="text-xs text-gray-500">Roll No: ' + (u.roll_number || 'N/A') + ' • ' + (u.email || '') + '</p></div></div><div class="flex gap-2"><button data-id="' + u.id + '" class="approve-btn w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center hover:bg-emerald-100 transition-all"><iconify-icon icon="lucide:check"></iconify-icon></button><button data-id="' + u.id + '" class="reject-btn w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-100 transition-all"><iconify-icon icon="lucide:x"></iconify-icon></button></div>';
+                  listContainer.appendChild(div);
+                });
+              }
+            }
+          }
+        }
+      } catch (e) { }
+
+      // dynamic approve/reject
+      document.addEventListener('click', async function (e) {
+        var approveBtn = e.target.closest('.approve-btn');
+        if (approveBtn) {
+          var id = approveBtn.getAttribute('data-id');
+          if (id) {
+            var updateRes = await AHApi.UsersAPI.updateStatus(id, 'active');
+            if (updateRes.success) {
+              AH.showToast('Student approved successfully', 'success');
+              var row = approveBtn.closest('.flex.items-center.justify-between'); if (row) row.style.opacity = '.4';
+            }
+          }
+        }
+        var rejectBtn = e.target.closest('.reject-btn');
+        if (rejectBtn) {
+          var id = rejectBtn.getAttribute('data-id');
+          if (id) {
+            AH.showConfirm('Reject Registration', 'Are you sure you want to reject this registration?', async function () {
+              var delRes = await AHApi.UsersAPI.delete(id);
+              if (delRes.success) {
+                AH.showToast('Registration rejected', 'warn');
+                var row = rejectBtn.closest('.flex.items-center.justify-between'); if (row) row.style.opacity = '.4';
+              }
+            });
+          }
+        }
+      });
+
+      var cta = document.querySelector('button.bg-accent-purple');
+      if (cta) cta.onclick = function () { window.location.href = 'admin-assignments.html'; };
+      // Logout
+      var logoutLink = document.getElementById('nav-logout');
+      if (logoutLink) logoutLink.addEventListener('click', function (e) { e.preventDefault(); AHApi.Auth.logout(); });
+    });
+
+  </script>
+
+<!-- Mobile Bottom Navigation -->
+  <div class="mobile-bottom-nav">
+    <a href="admin-dashboard.html" class="nav-dashboard active">
+      <iconify-icon icon="lucide:layout-dashboard" class="text-xl"></iconify-icon>
+      <span>Home</span>
+    </a>
+    <a href="admin-assignments.html" class="nav-assignments">
+      <iconify-icon icon="lucide:book-open" class="text-xl"></iconify-icon>
+      <span>Tasks</span>
+    </a>
+    <a href="admin-submissions.html" class="nav-submissions">
+      <iconify-icon icon="lucide:check-circle" class="text-xl"></iconify-icon>
+      <span>Submit</span>
+    </a>
+    <a href="admin-notifications.html" class="nav-notifications">
+      <iconify-icon icon="lucide:bell" class="text-xl"></iconify-icon>
+      <span>Alerts</span>
+    </a>
+    <a href="admin-settings.html" class="nav-settings">
+      <iconify-icon icon="lucide:settings" class="text-xl"></iconify-icon>
+      <span>Settings</span>
+    </a>
+  </div>
+</body>
+
+</html>

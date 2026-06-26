@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assignments List | AssignHub Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif
+    }
+
+    .sidebar-gradient {
+      background: #131432
+    }
+
+    .card-shadow {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05)
+    }
+
+    .accent-purple {
+      color: #5D5FEF
+    }
+
+    .bg-accent-purple {
+      background-color: #5D5FEF
+    }
+
+    .bg-accent-purple-light {
+      background-color: rgba(93, 95, 239, 0.1)
+    }
+  </style>
+  <style>
+    sd-component {
+      display: block;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/petite-vue@0.4.1/dist/petite-vue.iife.js" defer init></script>
+  <script src="/api.js"></script>
+
+  <style id="safe-mobile-fixes">
+    /* 2026 Mobile Enhancements */
+    @media (max-width: 768px) {
+
+      html,
+      body {
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+      }
+
+      aside {
+        display: none !important;
+      }
+
+      main,
+      main {
+        margin-left: 0 !important;
+        padding: 16px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding-bottom: 80px !important;
+        /* Bottom nav space */
+      }
+
+      .card {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        margin-bottom: 20px !important;
+      }
+
+      table {
+        display: block !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        width: 100% !important;
+        -webkit-overflow-scrolling: touch !important;
+      }
+
+      input,
+      select,
+      textarea,
+      button,
+      .btn {
+        min-height: 48px !important;
+        font-size: 16px !important;
+      }
+
+      /* Mobile Bottom Navigation */
+      .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border-top: 1px solid #eaeaea;
+        justify-content: space-around;
+        padding: 10px 0;
+        z-index: 9999;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .mobile-bottom-nav a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #64748b;
+        text-decoration: none;
+        font-size: 12px;
+        gap: 4px;
+      }
+
+      .mobile-bottom-nav a.active {
+        color: #6366f1;
+      }
+    }
+
+    @media (min-width: 769px) {
+
+      .mobile-bottom-nav,
+      .mobile-top-bar {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="min-h-screen bg-[#F8F9FC] flex"><!-- component: Sidebar (9f9a9751-b7b0-44c9-8e70-a1fa1ece909e) -->
+    <div
+      v-scope="{ ...{&quot;activeItem&quot;:&quot;assignments&quot;,&quot;dashboardHref&quot;:&quot;admin-dashboard.html&quot;,&quot;registrationsHref&quot;:&quot;admin-registrations.html&quot;,&quot;registrationBadgeCount&quot;:12,&quot;assignmentsHref&quot;:&quot;admin-assignments.html&quot;,&quot;submissionsHref&quot;:&quot;admin-submissions.html&quot;,&quot;studentsHref&quot;:&quot;admin-students.html&quot;,&quot;analyticsHref&quot;:&quot;admin-analytics.html&quot;,&quot;notificationsHref&quot;:&quot;admin-notifications.html&quot;,&quot;settingsHref&quot;:&quot;admin-settings.html&quot;,&quot;logoutHref&quot;:&quot;login.html&quot;}, $emit() {} }">
+      <aside class="w-[260px] bg-[#131432] text-white flex flex-col fixed h-full z-50">
+        <div class="p-8">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-[#5D5FEF] rounded-xl flex items-center justify-center">
+              <iconify-icon icon="lucide:graduation-cap" class="text-2xl text-white"></iconify-icon>
+            </div>
+            <span class="text-xl font-bold tracking-tight">AssignHub</span>
+          </div>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-1">
+          <a :href="dashboardHref" id="nav-dashboard"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'dashboard' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:layout-grid" class="text-xl"></iconify-icon>
+            <span class="font-medium">Dashboard</span>
+          </a>
+          <a :href="registrationsHref" id="nav-registrations"
+            class="flex items-center justify-between px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'registrations' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <div class="flex items-center gap-3">
+              <iconify-icon icon="lucide:user-plus" class="text-xl"></iconify-icon>
+              <span class="font-medium">Registrations</span>
+            </div>
+            <span v-if="registrationBadgeCount > 0"
+              class="bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">
+              {{ registrationBadgeCount }}
+            </span>
+          </a>
+          <a :href="assignmentsHref" id="nav-assignments"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'assignments' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:book-open" class="text-xl"></iconify-icon>
+            <span class="font-medium">Assignments</span>
+          </a>
+          <a :href="submissionsHref" id="nav-submissions"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'submissions' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:send" class="text-xl"></iconify-icon>
+            <span class="font-medium">Submissions</span>
+          </a>
+          <a :href="studentsHref" id="nav-students" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'students' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:users" class="text-xl"></iconify-icon>
+            <span class="font-medium">Students</span>
+          </a>
+          <a :href="analyticsHref" id="nav-analytics"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'analytics' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:bar-chart-3" class="text-xl"></iconify-icon>
+            <span class="font-medium">Analytics</span>
+          </a>
+          <a :href="notificationsHref" id="nav-notifications"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'notifications' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:bell" class="text-xl"></iconify-icon>
+            <span class="font-medium">Notifications</span>
+          </a>
+          <a :href="settingsHref" id="nav-settings" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'settings' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:settings" class="text-xl"></iconify-icon>
+            <span class="font-medium">Settings</span>
+          </a>
+        </nav>
+
+        <div class="p-4 border-t border-white/10">
+          <div class="flex items-center gap-3 px-4 py-4">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Meera" alt="Admin Avatar"
+              class="w-10 h-10 rounded-full bg-gray-200">
+            <div class="flex-1 overflow-hidden">
+              <p class="text-sm font-semibold truncate">Dr. Meera Sharma</p>
+              <p class="text-xs text-gray-400 truncate">Administrator</p>
+            </div>
+          </div>
+          <a :href="logoutHref" id="nav-logout"
+            class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-red-400 transition-all">
+            <iconify-icon icon="lucide:log-out" class="text-xl"></iconify-icon>
+            <span class="font-medium">Logout</span>
+          </a>
+        </div>
+      </aside>
+    </div>
+    <!-- /component: Sidebar (9f9a9751-b7b0-44c9-8e70-a1fa1ece909e) -->
+    <main class="flex-1 ml-[260px] p-8">
+      <header class="flex items-center justify-between mb-8">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">Assignments</h1>
+          <p class="text-gray-500">Create and manage academic tasks for your students</p>
+        </div>
+        <div class="flex items-center gap-4"><button
+            class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"><iconify-icon
+              icon="lucide:search" class="text-xl"></iconify-icon></button><button id="cta-create-assignment"
+            class="flex items-center gap-2 px-6 py-2.5 bg-accent-purple text-white font-semibold rounded-xl hover:opacity-90 shadow-lg shadow-indigo-200 transition-all"><iconify-icon
+              icon="lucide:plus-circle" class="text-xl"></iconify-icon><span>Create Assignment</span></button></div>
+      </header>
+      <div class="bg-white rounded-3xl card-shadow border border-gray-50 overflow-hidden">
+        <div class="p-6 border-b border-gray-50 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex items-center gap-4">
+            <div class="relative"><input type="text" placeholder="Search assignments..."
+                class="pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent-purple/20 w-64 transition-all text-gray-700"><iconify-icon
+                icon="lucide:search" class="absolute left-3 top-2.5 text-gray-400"></iconify-icon></div>
+            <div class="flex items-center bg-gray-50 border border-gray-200 rounded-xl p-1"><button
+                class="px-4 py-1 text-xs font-semibold rounded-lg bg-white shadow-sm text-accent-purple">All</button><button
+                class="px-4 py-1 text-xs font-semibold rounded-lg text-gray-500 hover:text-gray-700">Active</button><button
+                class="px-4 py-1 text-xs font-semibold rounded-lg text-gray-500 hover:text-gray-700">Closed</button>
+            </div>
+          </div>
+          <div class="flex items-center gap-2"><span class="text-sm text-gray-500">Sort by:</span><select
+              class="bg-transparent text-sm font-semibold text-gray-900 focus:outline-none cursor-pointer">
+              <option>Newest First</option>
+              <option>Oldest First</option>
+              <option>Deadline (Asc)</option>
+            </select></div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead class="bg-gray-50/50">
+              <tr class="text-gray-400 text-xs font-semibold uppercase tracking-wider">
+                <th class="px-6 py-4">Assignment Name</th>
+                <th class="px-6 py-4">Upload Date</th>
+                <th class="px-6 py-4">Deadline</th>
+                <th class="px-6 py-4">Submissions</th>
+                <th class="px-6 py-4">Status</th>
+                <th class="px-6 py-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50"></tbody>
+          </table>
+        </div>
+        <div class="p-6 border-t border-gray-50 flex items-center justify-between">
+          <p class="text-sm text-gray-500">Loading...</p>
+          <div class="flex items-center gap-2"><button
+              class="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 hover:bg-gray-50 transition-all"><iconify-icon
+                icon="lucide:chevron-left"></iconify-icon></button><button
+              class="w-8 h-8 flex items-center justify-center rounded-lg bg-accent-purple text-white font-bold text-sm">1</button><button
+              class="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm">2</button><button
+              class="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm">3</button><button
+              class="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 hover:bg-gray-50 transition-all"><iconify-icon
+                icon="lucide:chevron-right"></iconify-icon></button></div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script>
+    /* AssignHub shared interaction logic */
+    (function () {
+
+      /* ── Toast notification ── */
+      function showToast(msg, type) {
+        var t = document.getElementById('ah-toast');
+        if (!t) {
+          t = document.createElement('div');
+          t.id = 'ah-toast';
+          t.style.cssText = 'position:fixed;bottom:28px;right:28px;z-index:9999;display:flex;align-items:center;gap:10px;padding:14px 22px;border-radius:16px;font-family:inherit;font-size:14px;font-weight:600;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,0.18);transition:opacity .3s,transform .3s;opacity:0;transform:translateY(12px);pointer-events:none;';
+          document.body.appendChild(t);
+        }
+        var icon = type === 'success' ? '✓' : type === 'error' ? '✕' : type === 'warn' ? '⚠' : 'ℹ';
+        var bg = type === 'success' ? '#22c55e' : type === 'error' ? '#ef4444' : type === 'warn' ? '#f59e0b' : '#5D5FEF';
+        t.style.background = bg;
+        t.innerHTML = '<span style="font-size:16px;">' + icon + '</span>' + msg;
+        t.style.opacity = '1'; t.style.transform = 'translateY(0)';
+        clearTimeout(t._timer);
+        t._timer = setTimeout(function () { t.style.opacity = '0'; t.style.transform = 'translateY(12px)'; }, 2800);
+      }
+
+      /* ── Simple confirm modal ── */
+      function showConfirm(title, msg, onYes) {
+        var old = document.getElementById('ah-modal'); if (old) old.remove();
+        var m = document.createElement('div');
+        m.id = 'ah-modal';
+        m.innerHTML = '<div style="position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:10000;display:flex;align-items:center;justify-content:center;">' +
+          '<div style="background:#fff;border-radius:24px;padding:36px 32px;width:360px;box-shadow:0 24px 80px rgba(0,0,0,.2);font-family:inherit;">' +
+          '<h3 style="margin:0 0 10px;font-size:18px;font-weight:800;color:#111;">' + title + '</h3>' +
+          '<p style="margin:0 0 28px;font-size:14px;color:#6b7280;">' + msg + '</p>' +
+          '<div style="display:flex;gap:10px;">' +
+          '<button id="ah-modal-cancel" style="flex:1;padding:12px;background:#f3f4f6;color:#374151;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;">Cancel</button>' +
+          '<button id="ah-modal-ok" style="flex:1;padding:12px;background:#5D5FEF;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;">Confirm</button>' +
+          '</div></div></div>';
+        document.body.appendChild(m);
+        document.getElementById('ah-modal-cancel').onclick = function () { m.remove(); };
+        document.getElementById('ah-modal-ok').onclick = function () { m.remove(); onYes(); };
+        m.firstElementChild.onclick = function (e) { if (e.target === this) m.remove(); };
+      }
+
+      /* expose globals */
+      window.AH = { showToast: showToast, showConfirm: showConfirm };
+    })();
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // Create assignment
+      var cta = document.getElementById('cta-create-assignment');
+      if (cta) cta.onclick = function () { AH.showToast('Create assignment form would open here', 'info'); };
+
+      // Edit buttons
+      [1, 2, 3, 4].forEach(function (n) {
+        var b = document.getElementById('btn-edit-' + n);
+        if (b) b.onclick = function () { AH.showToast('Edit assignment #' + n, 'info'); };
+      });
+
+      // Delete buttons
+      [1, 2, 3, 4].forEach(function (n) {
+        var b = document.getElementById('btn-delete-' + n);
+        if (b) b.onclick = function () {
+          AH.showConfirm('Delete Assignment', 'Are you sure you want to delete this assignment? This cannot be undone.', function () {
+            AH.showToast('Assignment deleted', 'error');
+          });
+        };
+      });
+
+      // Filter tabs
+      document.querySelectorAll('.flex.items-center.bg-gray-50 button').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          this.closest('.flex').querySelectorAll('button').forEach(function (b) {
+            b.className = b.className.replace('bg-white shadow-sm text-accent-purple', '').replace('text-gray-500', '') + ' text-gray-500 hover:text-gray-700';
+          });
+          this.className = this.className.replace('text-gray-500 hover:text-gray-700', '') + ' bg-white shadow-sm text-accent-purple';
+          AH.showToast('Showing ' + this.textContent.trim() + ' assignments', 'info');
+        });
+      });
+
+      // Header search icon
+      document.querySelector('button:has(iconify-icon[icon="lucide:search"])') && document.querySelector('button:has(iconify-icon[icon="lucide:search"])').addEventListener('click', function () { document.querySelector('input[type="text"]').focus(); });
+    });
+
+    // Admin assignments - load real assignments and wire create
+    document.addEventListener('DOMContentLoaded', async function () {
+      if (!AHApi.guardAdmin()) return;
+      var logoutLink = document.getElementById('nav-logout');
+      if (logoutLink) logoutLink.addEventListener('click', function (e) { e.preventDefault(); AHApi.Auth.logout(); });
+
+      // Create assignment modal
+      var cta = document.getElementById('cta-create-assignment');
+      if (cta) cta.onclick = function () { showCreateModal(); };
+
+      function showCreateModal() {
+        var old = document.getElementById('ah-create-modal'); if (old) old.remove();
+        var m = document.createElement('div');
+        m.id = 'ah-create-modal';
+        m.innerHTML = '<div style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;">' +
+          '<div style="background:#fff;border-radius:24px;padding:36px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;font-family:inherit;">' +
+          '<h3 style="margin:0 0 24px;font-size:20px;font-weight:800;color:#111;">Create New Assignment</h3>' +
+          '<div style="display:grid;gap:16px;">' +
+          '<div><label style="display:block;font-size:12px;font-weight:700;color:#6b7280;margin-bottom:6px;text-transform:uppercase;">Title *</label>' +
+          '<input id="ca-title" type="text" placeholder="Assignment title" style="width:100%;padding:12px 16px;border:1px solid #e5e7eb;border-radius:12px;font-size:14px;box-sizing:border-box;"></div>' +
+          '<div><label style="display:block;font-size:12px;font-weight:700;color:#6b7280;margin-bottom:6px;text-transform:uppercase;">Subject</label>' +
+          '<input id="ca-subject" type="text" placeholder="e.g. Calculus & Integration" style="width:100%;padding:12px 16px;border:1px solid #e5e7eb;border-radius:12px;font-size:14px;box-sizing:border-box;"></div>' +
+          '<div><label style="display:block;font-size:12px;font-weight:700;color:#6b7280;margin-bottom:6px;text-transform:uppercase;">Department</label>' +
+          '<select id="ca-dept" style="width:100%;padding:12px 16px;border:1px solid #e5e7eb;border-radius:12px;font-size:14px;box-sizing:border-box;">' +
+          '<option value="">All Departments</option><option>Computer Science</option><option>Physics</option><option>Mathematics</option><option>Chemistry</option><option>Biology</option><option>Electrical Engineering</option></select></div>' +
+          '<div><label style="display:block;font-size:12px;font-weight:700;color:#6b7280;margin-bottom:6px;text-transform:uppercase;">Description</label>' +
+          '<textarea id="ca-desc" rows="3" placeholder="Assignment instructions..." style="width:100%;padding:12px 16px;border:1px solid #e5e7eb;border-radius:12px;font-size:14px;box-sizing:border-box;resize:vertical;"></textarea></div>' +
+          '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">' +
+          '<div><label style="display:block;font-size:12px;font-weight:700;color:#6b7280;margin-bottom:6px;text-transform:uppercase;">Deadline *</label>' +
+          '<input id="ca-deadline" type="datetime-local" style="width:100%;padding:12px 16px;border:1px solid #e5e7eb;border-radius:12px;font-size:14px;box-sizing:border-box;"></div>' +
+          '<div><label style="display:block;font-size:12px;font-weight:700;color:#6b7280;margin-bottom:6px;text-transform:uppercase;">Max Score</label>' +
+          '<input id="ca-score" type="number" value="100" min="1" style="width:100%;padding:12px 16px;border:1px solid #e5e7eb;border-radius:12px;font-size:14px;box-sizing:border-box;"></div></div>' +
+          '<div><label style="display:block;font-size:12px;font-weight:700;color:#6b7280;margin-bottom:6px;text-transform:uppercase;">Assignment File (optional)</label>' +
+          '<input id="ca-file" type="file" accept=".pdf,.doc,.docx,.xlsx,.pptx,.txt,.zip" style="width:100%;padding:12px 16px;border:1px solid #e5e7eb;border-radius:12px;font-size:14px;box-sizing:border-box;"></div>' +
+          '</div><div style="display:flex;gap:12px;margin-top:24px;">' +
+          '<button id="ca-cancel" style="flex:1;padding:12px;background:#f3f4f6;color:#374151;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;">Cancel</button>' +
+          '<button id="ca-submit" style="flex:1;padding:12px;background:#5D5FEF;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;">Create Assignment</button>' +
+          '</div></div></div>';
+        document.body.appendChild(m);
+        document.getElementById('ca-cancel').onclick = function () { m.remove(); };
+        document.getElementById('ca-submit').onclick = async function () {
+          var title = document.getElementById('ca-title').value.trim();
+          var deadline = document.getElementById('ca-deadline').value;
+          if (!title || !deadline) { AH.showToast('Title and deadline are required', 'error'); return; }
+          var fd = new FormData();
+          fd.append('title', title);
+          fd.append('subject', document.getElementById('ca-subject').value);
+          fd.append('department', document.getElementById('ca-dept').value);
+          fd.append('description', document.getElementById('ca-desc').value);
+          fd.append('deadline', new Date(deadline).toISOString());
+          fd.append('max_score', document.getElementById('ca-score').value || 100);
+          var file = document.getElementById('ca-file').files[0];
+          if (file) fd.append('file', file);
+          this.textContent = 'Creating...'; this.disabled = true;
+          var res = await AHApi.AssignmentsAPI.create(fd);
+          this.textContent = 'Create Assignment'; this.disabled = false;
+          if (!res.success) { AH.showToast(res.message || 'Failed to create assignment', 'error'); return; }
+          AH.showToast('Assignment created successfully!', 'success');
+          m.remove();
+          loadAssignments();
+        };
+      }
+
+      function showEditModal(a) {
+        var old = document.getElementById('ah-edit-modal'); if (old) old.remove();
+        var m = document.createElement('div');
+        m.id = 'ah-edit-modal';
+
+        var deadlineDate = new Date(a.deadline);
+        // Handle timezone offset for local string formatting nicely
+        var localIsoStr = new Date(deadlineDate.getTime() - (deadlineDate.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
+
+        m.innerHTML = '<div style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;">' +
+          '<div style="background:#fff;border-radius:24px;padding:36px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;font-family:inherit;">' +
+          '<h3 style="margin:0 0 24px;font-size:20px;font-weight:800;color:#111;">Edit Assignment</h3>' +
+          '<div style="display:grid;gap:16px;">' +
+          '<div><label style="display:block;font-size:12px;font-weight:700;color:#6b7280;margin-bottom:6px;text-transform:uppercase;">Title *</label>' +
+          '<input id="ea-title" type="text" value="' + (a.title || '').replace(/"/g, '&quot;') + '" style="width:100%;padding:12px 16px;border:1px solid #e5e7eb;border-radius:12px;font-size:14px;box-sizing:border-box;"></div>' +
+          '<div><label style="display:block;font-size:12px;font-weight:700;color:#6b7280;margin-bottom:6px;text-transform:uppercase;">Subject</label>' +
+          '<input id="ea-subject" type="text" value="' + (a.subject || '').replace(/"/g, '&quot;') + '" style="width:100%;padding:12px 16px;border:1px solid #e5e7eb;border-radius:12px;font-size:14px;box-sizing:border-box;"></div>' +
+          '<div><label style="display:block;font-size:12px;font-weight:700;color:#6b7280;margin-bottom:6px;text-transform:uppercase;">Department</label>' +
+          '<select id="ea-dept" style="width:100%;padding:12px 16px;border:1px solid #e5e7eb;border-radius:12px;font-size:14px;box-sizing:border-box;">' +
+          '<option value="">All Departments</option><option>Computer Science</option><option>Physics</option><option>Mathematics</option><option>Chemistry</option><option>Biology</option><option>Electrical Engineering</option></select></div>' +
+          '<div><label style="display:block;font-size:12px;font-weight:700;color:#6b7280;margin-bottom:6px;text-transform:uppercase;">Description</label>' +
+          '<textarea id="ea-desc" rows="3" style="width:100%;padding:12px 16px;border:1px solid #e5e7eb;border-radius:12px;font-size:14px;box-sizing:border-box;resize:vertical;">' + (a.description || '').replace(/</g, '&lt;') + '</textarea></div>' +
+          '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">' +
+          '<div><label style="display:block;font-size:12px;font-weight:700;color:#6b7280;margin-bottom:6px;text-transform:uppercase;">Deadline *</label>' +
+          '<input id="ea-deadline" type="datetime-local" value="' + localIsoStr + '" style="width:100%;padding:12px 16px;border:1px solid #e5e7eb;border-radius:12px;font-size:14px;box-sizing:border-box;"></div>' +
+          '<div><label style="display:block;font-size:12px;font-weight:700;color:#6b7280;margin-bottom:6px;text-transform:uppercase;">Max Score</label>' +
+          '<input id="ea-score" type="number" value="' + (a.max_score || 100) + '" min="1" style="width:100%;padding:12px 16px;border:1px solid #e5e7eb;border-radius:12px;font-size:14px;box-sizing:border-box;"></div></div>' +
+          '<div><label style="display:block;font-size:12px;font-weight:700;color:#6b7280;margin-bottom:6px;text-transform:uppercase;">Assignment File (optional - upload new to replace)</label>' +
+          '<input id="ea-file" type="file" accept=".pdf,.doc,.docx,.xlsx,.pptx,.txt,.zip" style="width:100%;padding:12px 16px;border:1px solid #e5e7eb;border-radius:12px;font-size:14px;box-sizing:border-box;"></div>' +
+          '</div><div style="display:flex;gap:12px;margin-top:24px;">' +
+          '<button id="ea-cancel" style="flex:1;padding:12px;background:#f3f4f6;color:#374151;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;">Cancel</button>' +
+          '<button id="ea-submit" style="flex:1;padding:12px;background:#5D5FEF;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;">Save Changes</button>' +
+          '</div></div></div>';
+        document.body.appendChild(m);
+
+        var deptSelect = document.getElementById('ea-dept');
+        if (a.department) {
+          for (var i = 0; i < deptSelect.options.length; i++) {
+            if (deptSelect.options[i].text === a.department) { deptSelect.selectedIndex = i; break; }
+          }
+        }
+
+        document.getElementById('ea-cancel').onclick = function () { m.remove(); };
+        document.getElementById('ea-submit').onclick = async function () {
+          var title = document.getElementById('ea-title').value.trim();
+          var deadline = document.getElementById('ea-deadline').value;
+          if (!title || !deadline) { AH.showToast('Title and deadline are required', 'error'); return; }
+          var fd = new FormData();
+          fd.append('title', title);
+          fd.append('subject', document.getElementById('ea-subject').value);
+          fd.append('department', document.getElementById('ea-dept').value);
+          fd.append('description', document.getElementById('ea-desc').value);
+          fd.append('deadline', new Date(deadline).toISOString());
+          fd.append('max_score', document.getElementById('ea-score').value || 100);
+          var file = document.getElementById('ea-file').files[0];
+          if (file) fd.append('file', file);
+
+          this.textContent = 'Saving...'; this.disabled = true;
+          var res = await AHApi.AssignmentsAPI.update(a.id, fd);
+          this.textContent = 'Save Changes'; this.disabled = false;
+
+          if (!res.success) { AH.showToast(res.message || 'Failed to update assignment', 'error'); return; }
+          AH.showToast('Assignment updated successfully!', 'success');
+          m.remove();
+          loadAssignments();
+        };
+      }
+
+
+      // State for dynamic fetching
+      let currentParams = { page: 1, limit: 4, status: '', search: '', sort: 'newest' };
+
+      async function loadAssignments() {
+        var tbody = document.querySelector('tbody.divide-y.divide-gray-50');
+        if (!tbody) return;
+
+        tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-sm text-gray-500">Loading assignments...</td></tr>';
+
+        try {
+          var res = await AHApi.AssignmentsAPI.list(currentParams);
+          if (!res.success) throw new Error();
+
+          tbody.innerHTML = '';
+          if (res.assignments.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-sm text-gray-500">No assignments found matching your criteria.</td></tr>';
+          } else {
+            res.assignments.forEach(function (a) {
+              var tr = document.createElement('tr');
+
+              var daysStr = AHApi.daysLeft(a.deadline);
+              var dlColor = daysStr.includes('Expired') ? 'red' : (daysStr.includes('Today') ? 'orange' : (daysStr.includes('Upcoming') ? 'amber' : 'blue'));
+              var statusColor = a.status === 'active' ? 'emerald' : (a.status === 'upcoming' ? 'amber' : 'gray');
+
+              var subjectText = a.subject || 'General';
+
+              var iconName = 'lucide:file-text';
+              if (subjectText.toLowerCase().includes('math')) iconName = 'lucide:calculator';
+              else if (subjectText.toLowerCase().includes('phys')) iconName = 'lucide:flask-conical';
+              else if (subjectText.toLowerCase().includes('chem')) iconName = 'lucide:test-tube';
+              else if (subjectText.toLowerCase().includes('bio')) iconName = 'lucide:dna';
+
+              tr.innerHTML = '<td class="px-6 py-5"><div class="flex items-center gap-3"><div class="w-10 h-10 bg-indigo-50 text-accent-purple rounded-xl flex items-center justify-center"><iconify-icon icon="' + iconName + '" class="text-xl"></iconify-icon></div><div class="flex flex-col"><span class="text-sm font-bold text-gray-900">' + a.title + '</span><span class="text-xs text-gray-500">' + subjectText + '</span></div></div></td><td class="px-6 py-5 text-sm text-gray-600">' + AHApi.formatDate(a.created_at) + '</td><td class="px-6 py-5"><div class="flex flex-col"><span class="text-sm font-semibold text-gray-900">' + AHApi.formatDate(a.deadline) + '</span><span class="text-[10px] text-' + dlColor + '-500 font-bold uppercase tracking-tight">' + daysStr + '</span></div></td><td class="px-6 py-5 text-sm font-medium text-gray-900">' + (a.submission_count || 0) + '/' + (a.total_students || 0) + '</td><td class="px-6 py-5"><span class="px-3 py-1 bg-' + statusColor + '-50 text-' + statusColor + '-600 text-[11px] font-bold rounded-full uppercase">' + a.status + '</span></td><td class="px-6 py-5 text-right space-x-2"><button class="btn-edit inline-flex w-8 h-8 items-center justify-center rounded-lg hover:bg-gray-50 text-gray-400 hover:text-accent-purple transition-all" title="Edit"><iconify-icon icon="lucide:edit-3"></iconify-icon></button><a href="admin-submissions.html?assignment_id=' + a.id + '" class="inline-flex w-8 h-8 items-center justify-center rounded-lg hover:bg-gray-50 text-gray-400 hover:text-accent-purple transition-all" title="View Submissions"><iconify-icon icon="lucide:eye"></iconify-icon></a><button class="btn-del inline-flex w-8 h-8 items-center justify-center rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition-all" title="Delete"><iconify-icon icon="lucide:trash-2"></iconify-icon></button></td>';
+
+              tbody.appendChild(tr);
+
+              tr.querySelector('.btn-edit').onclick = function () { showEditModal(a); };
+              tr.querySelector('.btn-del').onclick = function () {
+                AH.showConfirm('Delete Assignment', 'Are you sure you want to delete "' + a.title + '"? This cannot be undone.', async function () {
+                  var dRes = await AHApi.AssignmentsAPI.delete(a.id);
+                  if (dRes.success) {
+                    AH.showToast('Assignment deleted', 'success');
+                    loadAssignments(); // reload current page
+                  } else {
+                    AH.showToast(dRes.message || 'Error deleting', 'error');
+                  }
+                });
+              };
+            });
+          }
+
+          // Update pagination info
+          var paginationInfo = document.querySelector('.p-6.border-t.border-gray-50 .text-sm.text-gray-500');
+          if (paginationInfo) {
+            var start = res.total === 0 ? 0 : (res.page - 1) * currentParams.limit + 1;
+            var end = Math.min(res.page * currentParams.limit, res.total);
+            paginationInfo.textContent = 'Showing ' + start + ' to ' + end + ' of ' + res.total + ' assignments';
+          }
+
+          // Rebuild pagination buttons
+          var pageButtonsContainer = document.querySelector('.p-6.border-t.border-gray-50 .flex.items-center.gap-2');
+          if (pageButtonsContainer) {
+            pageButtonsContainer.innerHTML = '';
+
+            // prev
+            var prev = document.createElement('button');
+            prev.className = 'w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 transition-all ' + (res.page > 1 ? 'text-gray-600 hover:bg-gray-50' : 'text-gray-300 cursor-not-allowed');
+            prev.innerHTML = '<iconify-icon icon="lucide:chevron-left"></iconify-icon>';
+            if (res.page > 1) prev.onclick = function () { currentParams.page--; loadAssignments(); };
+            pageButtonsContainer.appendChild(prev);
+
+            for (var i = 1; i <= res.pages; i++) {
+              var pBtn = document.createElement('button');
+              pBtn.className = 'w-8 h-8 flex items-center justify-center rounded-lg text-sm ' + (i === res.page ? 'bg-accent-purple text-white font-bold' : 'border border-gray-200 text-gray-600 hover:bg-gray-50');
+              pBtn.textContent = i;
+              pBtn.dataset.page = i;
+              if (i !== res.page) pBtn.onclick = function () { currentParams.page = parseInt(this.dataset.page); loadAssignments(); };
+              pageButtonsContainer.appendChild(pBtn);
+            }
+
+            // next
+            var next = document.createElement('button');
+            next.className = 'w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 transition-all ' + (res.page < res.pages ? 'text-gray-600 hover:bg-gray-50' : 'text-gray-300 cursor-not-allowed');
+            next.innerHTML = '<iconify-icon icon="lucide:chevron-right"></iconify-icon>';
+            if (res.page < res.pages) next.onclick = function () { currentParams.page++; loadAssignments(); };
+            pageButtonsContainer.appendChild(next);
+          }
+
+        } catch (e) {
+          tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-sm text-red-500">Error loading assignments</td></tr>';
+        }
+      }
+
+      // Bind Search Input
+      var searchInput = document.querySelector('input[type="text"]');
+      if (searchInput) {
+        var searchTimeout;
+        searchInput.addEventListener('input', function (e) {
+          clearTimeout(searchTimeout);
+          searchTimeout = setTimeout(function () {
+            currentParams.search = e.target.value.trim();
+            currentParams.page = 1;
+            loadAssignments();
+          }, 300);
+        });
+      }
+
+      // Bind Sort Dropdown
+      var sortSelect = document.querySelector('select');
+      if (sortSelect) {
+        sortSelect.addEventListener('change', function (e) {
+          var val = e.target.value;
+          if (val === 'Newest First') currentParams.sort = 'newest';
+          else if (val === 'Oldest First') currentParams.sort = 'oldest';
+          else if (val === 'Deadline (Asc)') currentParams.sort = 'deadline';
+          currentParams.page = 1;
+          loadAssignments();
+        });
+      }
+
+      // Bind Filter Tabs
+      var filterContainer = document.querySelector('.flex.items-center.bg-gray-50.border.border-gray-200.rounded-xl.p-1');
+      if (filterContainer) {
+        var tabs = filterContainer.querySelectorAll('button');
+        tabs.forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            tabs.forEach(function (b) {
+              b.className = b.className.replace('bg-white shadow-sm text-accent-purple', '').replace('text-gray-500', '') + ' text-gray-500 hover:text-gray-700';
+            });
+            this.className = this.className.replace('text-gray-500 hover:text-gray-700', '') + ' bg-white shadow-sm text-accent-purple';
+
+            var text = this.textContent.trim().toLowerCase();
+            if (text === 'all') currentParams.status = '';
+            else currentParams.status = text;
+
+            currentParams.page = 1;
+            loadAssignments();
+          });
+        });
+      }
+
+      // Initial load
+      loadAssignments();
+    });
+  </script>
+<!-- Mobile Bottom Navigation -->
+  <div class="mobile-bottom-nav">
+    <a href="admin-dashboard.html" class="nav-dashboard">
+      <iconify-icon icon="lucide:layout-dashboard" class="text-xl"></iconify-icon>
+      <span>Home</span>
+    </a>
+    <a href="admin-assignments.html" class="nav-assignments active">
+      <iconify-icon icon="lucide:book-open" class="text-xl"></iconify-icon>
+      <span>Tasks</span>
+    </a>
+    <a href="admin-submissions.html" class="nav-submissions">
+      <iconify-icon icon="lucide:check-circle" class="text-xl"></iconify-icon>
+      <span>Submit</span>
+    </a>
+    <a href="admin-notifications.html" class="nav-notifications">
+      <iconify-icon icon="lucide:bell" class="text-xl"></iconify-icon>
+      <span>Alerts</span>
+    </a>
+    <a href="admin-settings.html" class="nav-settings">
+      <iconify-icon icon="lucide:settings" class="text-xl"></iconify-icon>
+      <span>Settings</span>
+    </a>
+  </div>
+</body>
+
+</html>

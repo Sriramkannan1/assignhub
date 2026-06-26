@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Assignments | AssignHub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .sidebar-gradient {
+      background: #131432;
+    }
+
+    .card-shadow {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .accent-purple {
+      color: #5D5FEF;
+    }
+
+    .bg-accent-purple {
+      background-color: #5D5FEF;
+    }
+
+    .bg-accent-purple-light {
+      background-color: rgba(93, 95, 239, 0.1);
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/petite-vue@0.4.1/dist/petite-vue.iife.js" defer init></script>
+  <script src="/api.js"></script>
+
+  <style id="safe-mobile-fixes">
+    /* 2026 Mobile Enhancements */
+    @media (max-width: 768px) {
+
+      html,
+      body {
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+      }
+
+      aside {
+        display: none !important;
+      }
+
+      main,
+      main {
+        margin-left: 0 !important;
+        padding: 16px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding-bottom: 80px !important;
+        /* Bottom nav space */
+      }
+
+      .card {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        margin-bottom: 20px !important;
+      }
+
+      table {
+        display: block !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        width: 100% !important;
+        -webkit-overflow-scrolling: touch !important;
+      }
+
+      input,
+      select,
+      textarea,
+      button,
+      .btn {
+        min-height: 48px !important;
+        font-size: 16px !important;
+      }
+
+      /* Mobile Bottom Navigation */
+      .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border-top: 1px solid #eaeaea;
+        justify-content: space-around;
+        padding: 10px 0;
+        z-index: 9999;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .mobile-bottom-nav a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #64748b;
+        text-decoration: none;
+        font-size: 12px;
+        gap: 4px;
+      }
+
+      .mobile-bottom-nav a.active {
+        color: #6366f1;
+      }
+    }
+
+    @media (min-width: 769px) {
+
+      .mobile-bottom-nav,
+      .mobile-top-bar {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="min-h-screen bg-[#F8F9FC] flex">
+    <div
+      v-scope="{...{&quot;activeItem&quot;:&quot;assignments&quot;,&quot;dashboardHref&quot;:&quot;student-dashboard.html&quot;,&quot;assignmentsHref&quot;:&quot;student-assignments.html&quot;,&quot;submissionsHref&quot;:&quot;student-submissions.html&quot;,&quot;notificationsHref&quot;:&quot;student-notifications.html&quot;,&quot;settingsHref&quot;:&quot;student-settings.html&quot;,&quot;logoutHref&quot;:&quot;login.html&quot;}, $emit() {} }">
+      <aside class="w-[260px] bg-[#131432] text-white flex flex-col fixed h-full z-50">
+        <div class="p-8">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-[#5D5FEF] rounded-xl flex items-center justify-center">
+              <iconify-icon icon="lucide:graduation-cap" class="text-2xl text-white"></iconify-icon>
+            </div>
+            <span class="text-xl font-bold tracking-tight">AssignHub</span>
+          </div>
+        </div>
+        <nav class="flex-1 px-4 space-y-1">
+          <a :href="dashboardHref" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem==='dashboard'?'bg-[#5D5FEF] text-white':'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:layout-grid" class="text-xl"></iconify-icon><span
+              class="font-medium">Dashboard</span>
+          </a>
+          <a :href="assignmentsHref" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem==='assignments'?'bg-[#5D5FEF] text-white':'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:book-open" class="text-xl"></iconify-icon><span
+              class="font-medium">Assignments</span>
+          </a>
+          <a :href="submissionsHref" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem==='submissions'?'bg-[#5D5FEF] text-white':'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:send" class="text-xl"></iconify-icon><span class="font-medium">My
+              Submissions</span>
+          </a>
+          <a :href="notificationsHref" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem==='notifications'?'bg-[#5D5FEF] text-white':'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:bell" class="text-xl"></iconify-icon><span
+              class="font-medium">Notifications</span>
+          </a>
+          <a :href="settingsHref" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem==='settings'?'bg-[#5D5FEF] text-white':'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:settings" class="text-xl"></iconify-icon><span
+              class="font-medium">Settings</span>
+          </a>
+        </nav>
+        <div class="p-4 border-t border-white/10">
+          <div class="flex items-center gap-3 px-4 py-4">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Aarav" class="w-10 h-10 rounded-full bg-gray-200">
+            <div class="flex-1 overflow-hidden">
+              <p class="text-sm font-semibold truncate">Aarav Patel</p>
+              <p class="text-xs text-gray-400 truncate">Roll: 23CS105</p>
+            </div>
+          </div>
+          <a :href="logoutHref"
+            class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-red-400 transition-all">
+            <iconify-icon icon="lucide:log-out" class="text-xl"></iconify-icon><span class="font-medium">Logout</span>
+          </a>
+        </div>
+      </aside>
+    </div>
+    <main class="flex-1 ml-[260px] p-8">
+      <header class="flex items-center justify-between mb-8">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">My Assignments</h1>
+          <p class="text-gray-500">Browse and download all your assigned tasks</p>
+        </div>
+        <div class="flex items-center gap-3 pl-4 border-l border-gray-200">
+          <div class="text-right">
+            <p class="text-sm font-bold text-gray-900">Aarav Patel</p>
+            <p class="text-xs text-gray-500">Roll: 23CS105</p>
+          </div>
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Aarav"
+            class="w-11 h-11 rounded-full bg-indigo-50 border border-indigo-100">
+        </div>
+      </header>
+      <div class="flex items-center gap-4 mb-6">
+        <div class="relative flex-1 max-w-sm">
+          <iconify-icon icon="lucide:search"
+            class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></iconify-icon>
+          <input type="text" placeholder="Search assignments..."
+            class="w-full pl-11 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-200 text-sm">
+        </div>
+        <div class="flex bg-white border border-gray-200 rounded-xl p-1">
+          <button class="px-4 py-1.5 text-xs font-bold rounded-lg bg-[#5D5FEF] text-white">All</button>
+          <button class="px-4 py-1.5 text-xs font-semibold text-gray-500 hover:text-gray-900">Pending</button>
+          <button class="px-4 py-1.5 text-xs font-semibold text-gray-500 hover:text-gray-900">Submitted</button>
+          <button class="px-4 py-1.5 text-xs font-semibold text-gray-500 hover:text-gray-900">Graded</button>
+        </div>
+      </div>
+      <div id="assignments-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <!-- Dynamic assignments will be injected here -->
+      </div>
+    </main>
+  </div>
+  <script>
+    /* AssignHub shared interaction logic */
+    (function () {
+
+      /* ── Toast notification ── */
+      function showToast(msg, type) {
+        var t = document.getElementById('ah-toast');
+        if (!t) {
+          t = document.createElement('div');
+          t.id = 'ah-toast';
+          t.style.cssText = 'position:fixed;bottom:28px;right:28px;z-index:9999;display:flex;align-items:center;gap:10px;padding:14px 22px;border-radius:16px;font-family:inherit;font-size:14px;font-weight:600;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,0.18);transition:opacity .3s,transform .3s;opacity:0;transform:translateY(12px);pointer-events:none;';
+          document.body.appendChild(t);
+        }
+        var icon = type === 'success' ? '✓' : type === 'error' ? '✕' : type === 'warn' ? '⚠' : 'ℹ';
+        var bg = type === 'success' ? '#22c55e' : type === 'error' ? '#ef4444' : type === 'warn' ? '#f59e0b' : '#5D5FEF';
+        t.style.background = bg;
+        t.innerHTML = '<span style="font-size:16px;">' + icon + '</span>' + msg;
+        t.style.opacity = '1'; t.style.transform = 'translateY(0)';
+        clearTimeout(t._timer);
+        t._timer = setTimeout(function () { t.style.opacity = '0'; t.style.transform = 'translateY(12px)'; }, 2800);
+      }
+
+      /* ── Simple confirm modal ── */
+      function showConfirm(title, msg, onYes) {
+        var old = document.getElementById('ah-modal'); if (old) old.remove();
+        var m = document.createElement('div');
+        m.id = 'ah-modal';
+        m.innerHTML = '<div style="position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:10000;display:flex;align-items:center;justify-content:center;">' +
+          '<div style="background:#fff;border-radius:24px;padding:36px 32px;width:360px;box-shadow:0 24px 80px rgba(0,0,0,.2);font-family:inherit;">' +
+          '<h3 style="margin:0 0 10px;font-size:18px;font-weight:800;color:#111;">' + title + '</h3>' +
+          '<p style="margin:0 0 28px;font-size:14px;color:#6b7280;">' + msg + '</p>' +
+          '<div style="display:flex;gap:10px;">' +
+          '<button id="ah-modal-cancel" style="flex:1;padding:12px;background:#f3f4f6;color:#374151;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;">Cancel</button>' +
+          '<button id="ah-modal-ok" style="flex:1;padding:12px;background:#5D5FEF;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;">Confirm</button>' +
+          '</div></div></div>';
+        document.body.appendChild(m);
+        document.getElementById('ah-modal-cancel').onclick = function () { m.remove(); };
+        document.getElementById('ah-modal-ok').onclick = function () { m.remove(); onYes(); };
+        m.firstElementChild.onclick = function (e) { if (e.target === this) m.remove(); };
+      }
+
+      /* expose globals */
+      window.AH = { showToast: showToast, showConfirm: showConfirm };
+    })();
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // Filter tabs
+      document.querySelectorAll('button.px-4.py-1\.5').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          this.closest('.flex').querySelectorAll('button').forEach(function (b) {
+            b.className = b.className.replace('bg-[#5D5FEF] text-white', 'text-gray-500 hover:text-gray-900');
+          });
+          this.className = this.className.replace('text-gray-500 hover:text-gray-900', 'bg-[#5D5FEF] text-white');
+        });
+      });
+
+      // Submit Now buttons
+      document.querySelectorAll('button').forEach(function (btn) {
+        if (btn.textContent.trim() === 'Submit Now') {
+          btn.addEventListener('click', function () {
+            window.location.href = 'student-submissions.html';
+          });
+        }
+        if (btn.textContent.trim() === 'View Feedback') {
+          btn.addEventListener('click', function () {
+            window.location.href = 'student-submissions.html';
+          });
+        }
+        if (btn.textContent.trim() === 'View Details') {
+          btn.addEventListener('click', function () {
+            window.location.href = 'student-submissions.html';
+          });
+        }
+      });
+    });
+
+    // Student assignments - load real assignments
+    document.addEventListener('DOMContentLoaded', async function () {
+      if (!AHApi.guardStudent()) return;
+      var user = AHApi.Auth.getUser();
+      if (user) {
+        document.querySelectorAll('p.text-sm.font-semibold.truncate').forEach(function (el) { el.textContent = user.full_name || ''; });
+        document.querySelectorAll('p.text-xs.text-gray-400.truncate').forEach(function (el) { el.textContent = 'Roll: ' + (user.roll_number || ''); });
+        document.querySelectorAll('img[src*="dicebear"]').forEach(function (el) { el.src = AHApi.avatarUrl(user.avatar_seed || user.full_name); });
+        document.querySelectorAll('p.text-sm.font-bold.text-gray-900').forEach(function (el) { el.textContent = user.full_name; });
+        document.querySelectorAll('p.text-xs.text-gray-500').forEach(function (el) { el.textContent = 'Roll: ' + (user.roll_number || ''); });
+      }
+      var logoutLink = document.querySelector('[href="login.html"]');
+      if (logoutLink) logoutLink.addEventListener('click', function (e) { e.preventDefault(); AHApi.Auth.logout(); });
+
+      // Wire submit buttons to submission modal
+      function showSubmitModal(assignmentId, assignmentTitle) {
+        var old = document.getElementById('ah-submit-modal'); if (old) old.remove();
+        var m = document.createElement('div');
+        m.id = 'ah-submit-modal';
+        m.innerHTML = '<div style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;">' +
+          '<div style="background:#fff;border-radius:24px;padding:36px;width:100%;max-width:480px;font-family:inherit;">' +
+          '<h3 style="margin:0 0 8px;font-size:18px;font-weight:800;color:#111;">Submit Assignment</h3>' +
+          '<p style="margin:0 0 24px;font-size:13px;color:#6b7280;">' + assignmentTitle + '</p>' +
+          '<div style="margin-bottom:16px;"><label style="display:block;font-size:12px;font-weight:700;color:#6b7280;margin-bottom:6px;">UPLOAD FILE *</label>' +
+          '<input id="sm-file" type="file" accept=".pdf,.doc,.docx,.xlsx,.pptx,.txt,.zip" style="width:100%;padding:12px 16px;border:2px dashed #e5e7eb;border-radius:12px;font-size:14px;box-sizing:border-box;"></div>' +
+          '<div style="margin-bottom:24px;"><label style="display:block;font-size:12px;font-weight:700;color:#6b7280;margin-bottom:6px;">NOTES (optional)</label>' +
+          '<textarea id="sm-notes" rows="2" placeholder="Any notes for your submission..." style="width:100%;padding:12px 16px;border:1px solid #e5e7eb;border-radius:12px;font-size:14px;box-sizing:border-box;resize:none;"></textarea></div>' +
+          '<div style="display:flex;gap:12px;">' +
+          '<button id="sm-cancel" style="flex:1;padding:12px;background:#f3f4f6;color:#374151;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;">Cancel</button>' +
+          '<button id="sm-submit" style="flex:1;padding:12px;background:#5D5FEF;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;">Submit Now</button>' +
+          '</div></div></div>';
+        document.body.appendChild(m);
+        document.getElementById('sm-cancel').onclick = function () { m.remove(); };
+        document.getElementById('sm-submit').onclick = async function () {
+          var notes = document.getElementById('sm-notes').value;
+          var file = document.getElementById('sm-file').files[0];
+          if (!file) return AH.showToast('Please select a file to upload.', 'error');
+          try {
+            var formData = new FormData();
+            formData.append('assignment_id', assignmentId);
+            formData.append('file', file);
+            if (notes) formData.append('notes', notes);
+
+            var res = await AHApi.SubmissionsAPI.submit(formData);
+            if (res.success) {
+              AH.showToast('Assignment submitted successfully!', 'success');
+              m.remove();
+              window.location.reload();
+            } else {
+              AH.showToast(res.message || 'Submission failed.', 'error');
+            }
+          } catch (e) { AH.showToast('Error uploading file.', 'error'); }
+        };
+      }
+
+      let allAssignments = [];
+      let allSubmissions = [];
+      let currentFilter = 'All';
+
+      function renderAssignments() {
+        const container = document.getElementById('assignments-container');
+        container.innerHTML = '';
+
+        // Map submissions by assignment ID
+        const subMap = {};
+        allSubmissions.forEach(s => subMap[s.assignment_id] = s);
+
+        // Filter assignments
+        const searchInput = document.querySelector('input[type="text"]');
+        const term = searchInput ? searchInput.value.toLowerCase() : '';
+
+        const filtered = allAssignments.filter(a => {
+          if (term && !a.title.toLowerCase().includes(term) && !(a.description || '').toLowerCase().includes(term)) return false;
+          const sub = subMap[a.id];
+          const status = sub ? sub.status : 'pending';
+          if (currentFilter === 'Pending' && status !== 'pending') return false;
+          if (currentFilter === 'Submitted' && status !== 'submitted' && status !== 'late') return false;
+          if (currentFilter === 'Graded' && status !== 'graded') return false;
+          return true;
+        });
+
+        if (filtered.length === 0) {
+          container.innerHTML = '<div class="col-span-full p-12 text-center text-gray-500 bg-white rounded-3xl border border-gray-100 shadow-sm"><p class="text-base font-bold">No assignments found</p></div>';
+          return;
+        }
+
+        filtered.forEach(a => {
+          const sub = subMap[a.id];
+          let statusClass = '', statusLabel = '', badgeIcon = '', iconColor = '', iconBg = '', actionBtn = '';
+
+          if (!sub) {
+            statusLabel = 'Pending';
+            statusClass = 'bg-orange-50 text-orange-600';
+            badgeIcon = 'lucide:file-text';
+            iconColor = 'text-[#5D5FEF]';
+            iconBg = 'bg-indigo-50';
+            actionBtn = `<button data-id="${a.id}" data-title="${a.title}" class="submit-btn w-full py-2.5 bg-[#5D5FEF] text-white hover:opacity-90 shadow-md shadow-indigo-100 text-xs font-bold rounded-xl transition-all">Submit Now</button>`;
+          } else if (sub.status === 'submitted' || sub.status === 'late') {
+            statusLabel = sub.status === 'late' ? 'Late Submission' : 'Submitted';
+            statusClass = sub.status === 'late' ? 'bg-red-50 text-red-600' : 'bg-blue-50 text-blue-600';
+            badgeIcon = 'lucide:send';
+            iconColor = 'text-gray-600';
+            iconBg = 'bg-gray-100';
+            actionBtn = `<button class="w-full py-2.5 bg-gray-50 text-gray-500 cursor-not-allowed text-xs font-bold rounded-xl transition-all">Already Submitted</button>`;
+          } else if (sub.status === 'graded') {
+            statusLabel = 'Graded';
+            statusClass = 'bg-emerald-50 text-emerald-600';
+            badgeIcon = 'lucide:check-circle';
+            iconColor = 'text-emerald-600';
+            iconBg = 'bg-emerald-50';
+            actionBtn = `<button onclick="window.location.href='student-submissions.html'" class="w-full py-2.5 bg-gray-50 text-gray-500 hover:bg-gray-100 text-xs font-bold rounded-xl transition-all">View Feedback</button>`;
+          }
+
+          const scoreHtml = sub && sub.score !== null ? `<span class="font-bold text-emerald-600">${sub.score}/${sub.max_score || 100}</span>` : `<span class="font-bold text-gray-300">—</span>`;
+
+          container.innerHTML += `
+        <div class="bg-white p-6 rounded-3xl card-shadow border border-gray-50 hover:border-[#5D5FEF] transition-all group">
+            <div class="flex justify-between items-start mb-4">
+                <div class="w-10 h-10 ${iconBg} ${iconColor} rounded-xl flex items-center justify-center">
+                    <iconify-icon icon="${badgeIcon}" class="text-xl"></iconify-icon>
+                </div>
+                <span class="px-3 py-1 ${statusClass} text-[10px] font-bold uppercase rounded-full">${statusLabel}</span>
+            </div>
+            <h4 class="text-base font-bold text-gray-900 mb-1 group-hover:text-[#5D5FEF] transition-colors truncate" title="${a.title}">${a.title}</h4>
+            <p class="text-sm text-gray-500 mb-4 truncate">${a.description || 'No description'}</p>
+            <div class="flex items-center justify-between text-xs text-gray-400 mb-5">
+                <span class="flex items-center gap-1"><iconify-icon icon="lucide:calendar"></iconify-icon> Due: ${AHApi.formatDate(a.deadline)}</span>
+                ${scoreHtml}
+            </div>
+            ${actionBtn}
+        </div>
+      `;
+        });
+
+        document.querySelectorAll('.submit-btn').forEach(btn => {
+          btn.onclick = function () {
+            showSubmitModal(this.getAttribute('data-id'), this.getAttribute('data-title'));
+          };
+        });
+      }
+
+      // Bind filters
+      document.querySelectorAll('.flex.bg-white.border.border-gray-200.rounded-xl.p-1 button').forEach(btn => {
+        btn.onclick = function () {
+          currentFilter = this.textContent.trim();
+          renderAssignments();
+        };
+      });
+
+      var searchInput = document.querySelector('input[type="text"]');
+      if (searchInput) {
+        searchInput.onkeyup = function () { renderAssignments(); };
+      }
+
+      try {
+        const [aRes, sRes] = await Promise.all([
+          AHApi.AssignmentsAPI.list(),
+          AHApi.SubmissionsAPI.list()
+        ]);
+        if (aRes.success) allAssignments = aRes.assignments;
+        if (sRes.success) allSubmissions = sRes.submissions;
+        renderAssignments();
+      } catch (e) { }
+    });
+
+  </script>
+<!-- Mobile Bottom Navigation -->
+  <div class="mobile-bottom-nav">
+    <a href="student-dashboard.html" class="nav-dashboard">
+      <iconify-icon icon="lucide:layout-dashboard" class="text-xl"></iconify-icon>
+      <span>Home</span>
+    </a>
+    <a href="student-assignments.html" class="nav-assignments active">
+      <iconify-icon icon="lucide:book-open" class="text-xl"></iconify-icon>
+      <span>Tasks</span>
+    </a>
+    <a href="student-submissions.html" class="nav-submissions">
+      <iconify-icon icon="lucide:send" class="text-xl"></iconify-icon>
+      <span>Submit</span>
+    </a>
+    <a href="student-notifications.html" class="nav-notifications">
+      <iconify-icon icon="lucide:bell" class="text-xl"></iconify-icon>
+      <span>Alerts</span>
+    </a>
+    <a href="student-settings.html" class="nav-settings">
+      <iconify-icon icon="lucide:settings" class="text-xl"></iconify-icon>
+      <span>Settings</span>
+    </a>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard | AssignHub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .sidebar-gradient {
+      background: #131432;
+    }
+
+    .card-shadow {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .accent-purple {
+      color: #5D5FEF;
+    }
+
+    .bg-accent-purple {
+      background-color: #5D5FEF;
+    }
+
+    .bg-accent-purple-light {
+      background-color: rgba(93, 95, 239, 0.1);
+    }
+  </style>
+  <style>
+    sd-component {
+      display: block;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/petite-vue@0.4.1/dist/petite-vue.iife.js" defer init></script>
+  <script src="/api.js"></script>
+
+  <style id="safe-mobile-fixes">
+    /* 2026 Mobile Enhancements */
+    @media (max-width: 768px) {
+
+      html,
+      body {
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+      }
+
+      aside.fixed {
+        display: none !important;
+      }
+
+      main,
+      main {
+        margin-left: 0 !important;
+        padding: 16px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding-bottom: 80px !important;
+        /* Bottom nav space */
+      }
+
+      .card {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        margin-bottom: 20px !important;
+      }
+
+      table {
+        display: block !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        width: 100% !important;
+        -webkit-overflow-scrolling: touch !important;
+      }
+
+      input,
+      select,
+      textarea,
+      button,
+      .btn {
+        min-height: 48px !important;
+        font-size: 16px !important;
+      }
+
+      /* Mobile Bottom Navigation */
+      .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border-top: 1px solid #eaeaea;
+        justify-content: space-around;
+        padding: 10px 0;
+        z-index: 9999;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .mobile-bottom-nav a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #64748b;
+        text-decoration: none;
+        font-size: 12px;
+        gap: 4px;
+      }
+
+      .mobile-bottom-nav a.active {
+        color: #6366f1;
+      }
+    }
+
+    @media (min-width: 769px) {
+
+      .mobile-bottom-nav,
+      .mobile-top-bar {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="min-h-screen bg-[#F8F9FC] flex">
+    <!-- Shared Sidebar Component -->
+    <!-- component: Sidebar (9f9a9751-b7b0-44c9-8e70-a1fa1ece909e) -->
+    <div
+      v-scope="{ ...{&quot;activeItem&quot;:&quot;dashboard&quot;,&quot;dashboardHref&quot;:&quot;student-dashboard.html&quot;,&quot;assignmentsHref&quot;:&quot;student-assignments.html&quot;,&quot;submissionsHref&quot;:&quot;student-submissions.html&quot;,&quot;notificationsHref&quot;:&quot;student-notifications.html&quot;,&quot;settingsHref&quot;:&quot;student-settings.html&quot;,&quot;logoutHref&quot;:&quot;login.html&quot;}, $emit() {} }">
+      <aside class="w-[260px] bg-[#131432] text-white flex flex-col fixed h-full z-50">
+        <div class="p-8">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-[#5D5FEF] rounded-xl flex items-center justify-center">
+              <iconify-icon icon="lucide:graduation-cap" class="text-2xl text-white"></iconify-icon>
+            </div>
+            <span class="text-xl font-bold tracking-tight">AssignHub</span>
+          </div>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-1">
+          <a :href="dashboardHref" id="nav-dashboard"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'dashboard' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:layout-grid" class="text-xl"></iconify-icon>
+            <span class="font-medium">Dashboard</span>
+          </a>
+          <a :href="assignmentsHref" id="nav-assignments"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'assignments' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:book-open" class="text-xl"></iconify-icon>
+            <span class="font-medium">Assignments</span>
+          </a>
+          <a :href="submissionsHref" id="nav-submissions"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'submissions' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:send" class="text-xl"></iconify-icon>
+            <span class="font-medium">Submissions</span>
+          </a>
+          <a :href="notificationsHref" id="nav-notifications"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'notifications' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:bell" class="text-xl"></iconify-icon>
+            <span class="font-medium">Notifications</span>
+          </a>
+          <a :href="settingsHref" id="nav-settings" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
+            :class="activeItem === 'settings' ? 'bg-[#5D5FEF] text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'">
+            <iconify-icon icon="lucide:settings" class="text-xl"></iconify-icon>
+            <span class="font-medium">Settings</span>
+          </a>
+        </nav>
+
+        <div class="p-4 border-t border-white/10">
+          <div class="flex items-center gap-3 px-4 py-4">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Meera" alt="Admin Avatar"
+              class="w-10 h-10 rounded-full bg-gray-200">
+            <div class="flex-1 overflow-hidden">
+              <p class="text-sm font-semibold truncate">Dr. Meera Sharma</p>
+              <p class="text-xs text-gray-400 truncate">Administrator</p>
+            </div>
+          </div>
+          <a :href="logoutHref" id="nav-logout"
+            class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-red-400 transition-all">
+            <iconify-icon icon="lucide:log-out" class="text-xl"></iconify-icon>
+            <span class="font-medium">Logout</span>
+          </a>
+        </div>
+      </aside>
+    </div>
+    <!-- /component: Sidebar (9f9a9751-b7b0-44c9-8e70-a1fa1ece909e) -->
+
+    <!-- Main Content -->
+    <main class="flex-1 ml-[260px] p-8">
+      <!-- Header -->
+      <header class="flex items-center justify-between mb-10">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">Student Dashboard</h1>
+          <p class="text-gray-500">Welcome back, Aarav Patel</p>
+        </div>
+        <div class="flex items-center gap-4">
+          <button id="header-notif-btn"
+            class="w-11 h-11 flex items-center justify-center rounded-xl bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all">
+            <iconify-icon icon="lucide:bell" class="text-xl"></iconify-icon>
+          </button>
+          <div class="flex items-center gap-3 pl-4 border-l border-gray-200">
+            <div class="text-right hidden sm:block">
+              <p class="text-sm font-bold text-gray-900">Aarav Patel</p>
+              <p class="text-xs text-gray-500">Roll: 23CS105</p>
+            </div>
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Aarav"
+              class="w-11 h-11 rounded-full bg-indigo-50 border border-indigo-100" alt="Avatar">
+          </div>
+        </div>
+      </header>
+
+      <!-- Quick Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <div class="bg-white p-6 rounded-3xl card-shadow border border-gray-50">
+          <div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center mb-4">
+            <iconify-icon icon="lucide:clock" class="text-2xl"></iconify-icon>
+          </div>
+          <p class="text-sm font-medium text-gray-500">Pending</p>
+          <h3 class="text-2xl font-bold text-gray-900" id="stat-pending">--</h3>
+          <p class="text-xs text-orange-600 font-semibold mt-1" id="stat-pending-sub">&nbsp;</p>
+        </div>
+        <div class="bg-white p-6 rounded-3xl card-shadow border border-gray-50">
+          <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-4">
+            <iconify-icon icon="lucide:check-circle" class="text-2xl"></iconify-icon>
+          </div>
+          <p class="text-sm font-medium text-gray-500">Completed</p>
+          <h3 class="text-2xl font-bold text-gray-900" id="stat-completed">--</h3>
+          <p class="text-xs text-emerald-600 font-semibold mt-1" id="stat-completed-sub">&nbsp;</p>
+        </div>
+        <div class="bg-white p-6 rounded-3xl card-shadow border border-gray-50">
+          <div
+            class="w-12 h-12 bg-accent-purple-light text-accent-purple rounded-2xl flex items-center justify-center mb-4">
+            <iconify-icon icon="lucide:award" class="text-2xl"></iconify-icon>
+          </div>
+          <p class="text-sm font-medium text-gray-500">Average Grade</p>
+          <h3 class="text-2xl font-bold text-gray-900" id="stat-avg">--</h3>
+          <p class="text-xs text-accent-purple font-semibold mt-1" id="stat-avg-sub">&nbsp;</p>
+        </div>
+        <div class="bg-white p-6 rounded-3xl card-shadow border border-gray-50">
+          <div class="w-12 h-12 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center mb-4">
+            <iconify-icon icon="lucide:calendar-clock" class="text-2xl"></iconify-icon>
+          </div>
+          <p class="text-sm font-medium text-gray-500">Next Deadline</p>
+          <h3 class="text-2xl font-bold text-gray-900" id="stat-next">--</h3>
+          <p class="text-xs text-red-600 font-semibold mt-1" id="stat-next-sub">&nbsp;</p>
+        </div>
+      </div>
+
+      <!-- My Assignments & Progress -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+        <!-- Assignments List -->
+        <div class="lg:col-span-2">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-bold text-gray-900">My Assignments</h2>
+            <a href="student-assignments.html" id="view-all-assignments"
+              class="text-accent-purple text-sm font-bold hover:underline">View All</a>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          </div>
+        </div>
+
+        <!-- Grade Distribution -->
+        <div class="lg:col-span-1">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-bold text-gray-900">Grade Distribution</h2>
+          </div>
+          <div class="bg-white p-8 rounded-3xl card-shadow border border-gray-50">
+            <div class="space-y-6">
+            </div>
+            <button id="view-detailed-report"
+              class="w-full mt-10 py-3 bg-gray-50 text-gray-600 font-bold rounded-2xl hover:bg-gray-100 transition-all text-sm">View
+              Detailed Report</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activity & Timeline -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Recent Activity -->
+        <div class="bg-white p-8 rounded-3xl card-shadow border border-gray-50">
+          <h2 class="text-xl font-bold text-gray-900 mb-8">Recent Activity</h2>
+          <div class="space-y-6">
+          </div>
+        </div>
+
+        <!-- Upcoming Timeline -->
+        <div class="bg-white p-8 rounded-3xl card-shadow border border-gray-50">
+          <h2 class="text-xl font-bold text-gray-900 mb-8">Upcoming Timeline</h2>
+          <div class="relative">
+            <div class="absolute left-[19px] top-2 bottom-2 w-0.5 bg-gray-100"></div>
+            <div class="space-y-8">
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script>
+    /* AssignHub shared interaction logic */
+    (function () {
+
+      /* ── Toast notification ── */
+      function showToast(msg, type) {
+        var t = document.getElementById('ah-toast');
+        if (!t) {
+          t = document.createElement('div');
+          t.id = 'ah-toast';
+          t.style.cssText = 'position:fixed;bottom:28px;right:28px;z-index:9999;display:flex;align-items:center;gap:10px;padding:14px 22px;border-radius:16px;font-family:inherit;font-size:14px;font-weight:600;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,0.18);transition:opacity .3s,transform .3s;opacity:0;transform:translateY(12px);pointer-events:none;';
+          document.body.appendChild(t);
+        }
+        var icon = type === 'success' ? '✓' : type === 'error' ? '✕' : type === 'warn' ? '⚠' : 'ℹ';
+        var bg = type === 'success' ? '#22c55e' : type === 'error' ? '#ef4444' : type === 'warn' ? '#f59e0b' : '#5D5FEF';
+        t.style.background = bg;
+        t.innerHTML = '<span style="font-size:16px;">' + icon + '</span>' + msg;
+        t.style.opacity = '1'; t.style.transform = 'translateY(0)';
+        clearTimeout(t._timer);
+        t._timer = setTimeout(function () { t.style.opacity = '0'; t.style.transform = 'translateY(12px)'; }, 2800);
+      }
+
+      /* ── Simple confirm modal ── */
+      function showConfirm(title, msg, onYes) {
+        var old = document.getElementById('ah-modal'); if (old) old.remove();
+        var m = document.createElement('div');
+        m.id = 'ah-modal';
+        m.innerHTML = '<div style="position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:10000;display:flex;align-items:center;justify-content:center;">' +
+          '<div style="background:#fff;border-radius:24px;padding:36px 32px;width:360px;box-shadow:0 24px 80px rgba(0,0,0,.2);font-family:inherit;">' +
+          '<h3 style="margin:0 0 10px;font-size:18px;font-weight:800;color:#111;">' + title + '</h3>' +
+          '<p style="margin:0 0 28px;font-size:14px;color:#6b7280;">' + msg + '</p>' +
+          '<div style="display:flex;gap:10px;">' +
+          '<button id="ah-modal-cancel" style="flex:1;padding:12px;background:#f3f4f6;color:#374151;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;">Cancel</button>' +
+          '<button id="ah-modal-ok" style="flex:1;padding:12px;background:#5D5FEF;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;">Confirm</button>' +
+          '</div></div></div>';
+        document.body.appendChild(m);
+        document.getElementById('ah-modal-cancel').onclick = function () { m.remove(); };
+        document.getElementById('ah-modal-ok').onclick = function () { m.remove(); onYes(); };
+        m.firstElementChild.onclick = function (e) { if (e.target === this) m.remove(); };
+      }
+
+      /* expose globals */
+      window.AH = { showToast: showToast, showConfirm: showConfirm };
+    })();
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // Bell -> notifications
+      var notifBtn = document.getElementById('header-notif-btn');
+      if (notifBtn) notifBtn.onclick = function () { window.location.href = 'student-notifications.html'; };
+
+      // View detailed report
+      var reportBtn = document.getElementById('view-detailed-report');
+      if (reportBtn) reportBtn.onclick = function () { window.location.href = 'student-submissions.html'; };
+    });
+
+    // Student dashboard - load real stats, info, and dynamic widgets
+    document.addEventListener('DOMContentLoaded', async function () {
+      if (!AHApi.guardStudent()) return;
+      var user = AHApi.Auth.getUser();
+      if (user) {
+        document.querySelectorAll('p.text-sm.font-semibold.truncate').forEach(function (el) { el.textContent = user.full_name || 'Student'; });
+        document.querySelectorAll('p.text-xs.text-gray-400.truncate').forEach(function (el) { el.textContent = 'Roll: ' + (user.roll_number || ''); });
+        document.querySelectorAll('p.text-sm.font-bold.text-gray-900').forEach(function (el) { if (el.textContent.trim() === 'Aarav Patel' || el.closest('[data-ah-name]')) el.textContent = user.full_name || ''; });
+        document.querySelectorAll('p.text-xs.text-gray-500').forEach(function (el) { if (el.textContent.includes('23CS105') || el.textContent.includes('Roll:')) el.textContent = 'Roll: ' + (user.roll_number || ''); });
+        document.querySelectorAll('img[src*="dicebear"]').forEach(function (el) { el.src = AHApi.avatarUrl(user.avatar_seed || user.full_name); });
+        var welcome = document.querySelector('header p.text-gray-500');
+        if (welcome) welcome.textContent = 'Welcome back, ' + user.full_name;
+      }
+
+      // Load Top Stats
+      try {
+        var res = await AHApi.UsersAPI.studentStats();
+        if (res.success) {
+          var s = res.stats;
+          document.getElementById('stat-pending').textContent = String(s.pending).padStart(2, '0');
+          document.getElementById('stat-completed').textContent = s.completed;
+          document.getElementById('stat-avg').textContent = s.avg_score || '—';
+
+          var nextEl = document.getElementById('stat-next');
+          if (s.next_deadline) {
+            var days = AHApi.daysLeft(s.next_deadline.deadline);
+            nextEl.textContent = days.replace(' Days Left', '').replace('Today', '0');
+            var nextLabel = document.getElementById('stat-next-sub');
+            if (nextLabel) nextLabel.textContent = s.next_deadline.title;
+          } else {
+            nextEl.textContent = '—';
+          }
+        }
+      } catch (e) { }
+
+      try {
+        var aRes = await AHApi.AssignmentsAPI.list();
+        if (aRes.success) {
+          // My Assignments (Top 2)
+          var grid = document.querySelector('.lg\\:col-span-2 .grid');
+          if (grid) {
+            grid.innerHTML = '';
+            var top2 = aRes.assignments.filter(a => !a.my_submission).slice(0, 2);
+            if (top2.length === 0) grid.innerHTML = '<p class="text-sm text-gray-500">No pending assignments.</p>';
+            top2.forEach(a => {
+              var d = document.createElement('div');
+              d.className = 'bg-white p-6 rounded-3xl card-shadow border border-gray-50 hover:border-accent-purple transition-all group cursor-pointer';
+              d.onclick = () => window.location.href = 'student-assignments.html';
+              d.innerHTML = `
+            <div class="flex justify-between items-start mb-4">
+              <div class="w-10 h-10 bg-indigo-50 text-accent-purple rounded-xl flex items-center justify-center"><iconify-icon icon="lucide:file-text" class="text-xl"></iconify-icon></div>
+              <span class="px-3 py-1 bg-orange-50 text-orange-600 text-[10px] font-bold uppercase rounded-full">Pending</span>
+            </div>
+            <h4 class="text-lg font-bold text-gray-900 mb-1 group-hover:text-accent-purple transition-colors truncate">${a.title}</h4>
+            <p class="text-sm text-gray-500 mb-4 truncate">${a.description || 'No description'}</p>
+            <div class="flex items-center gap-2 text-xs text-gray-400"><iconify-icon icon="lucide:calendar" class="text-sm"></iconify-icon><span>Due: ${AHApi.formatDate(a.deadline)}</span></div>
+          `;
+              grid.appendChild(d);
+            });
+          }
+
+          // Upcoming Timeline
+          var timelineContainer = document.querySelector('.absolute.left-\\[19px\\]').nextElementSibling;
+          if (timelineContainer) {
+            timelineContainer.innerHTML = '';
+            var upcoming = [...aRes.assignments].filter(a => !a.my_submission).sort((a, b) => new Date(a.deadline) - new Date(b.deadline)).slice(0, 3);
+            if (upcoming.length === 0) timelineContainer.innerHTML = '<p class="text-sm text-gray-500 pl-12">No upcoming events.</p>';
+            upcoming.forEach((a, i) => {
+              var date = new Date(a.deadline).getDate();
+              var isUrgent = i === 0;
+              var borderClass = isUrgent ? 'border-accent-purple' : 'border-gray-200';
+              var textClass = isUrgent ? 'text-accent-purple' : 'text-gray-400';
+              var div = document.createElement('div');
+              div.className = 'relative flex gap-6 pl-12';
+              div.innerHTML = `
+            <div class="absolute left-0 w-10 h-10 bg-white border-2 ${borderClass} rounded-full flex items-center justify-center z-10"><span class="text-[10px] font-bold ${textClass}">${date}</span></div>
+            <div>
+              <p class="text-sm font-bold text-gray-900">${a.title}</p>
+              <p class="text-xs text-gray-500">Submission due at ${AHApi.formatDate(a.deadline, { hour: '2-digit', minute: '2-digit' })}</p>
+              <span class="inline-block mt-2 px-2 py-0.5 bg-indigo-50 text-accent-purple text-[10px] font-bold rounded uppercase">Deadline</span>
+            </div>
+          `;
+              timelineContainer.appendChild(div);
+            });
+          }
+        }
+      } catch (e) { }
+
+      // Load Submissions for Grades and Activity
+      try {
+        var subRes = await AHApi.SubmissionsAPI.list();
+        if (subRes.success) {
+          // Grade Distribution (Top 4 highest scored)
+          var graded = subRes.submissions.filter(s => s.status === 'graded').sort((a, b) => b.score - a.score);
+          var gradeContainer = document.querySelector('.lg\\:col-span-1 .space-y-6');
+          if (gradeContainer) {
+            gradeContainer.innerHTML = '';
+            var topGrades = graded.slice(0, 4);
+            if (topGrades.length === 0) gradeContainer.innerHTML = '<p class="text-sm text-gray-500">No graded assignments yet.</p>';
+            var colors = ['bg-accent-purple', 'bg-blue-500', 'bg-emerald-500', 'bg-orange-400'];
+            topGrades.forEach((g, i) => {
+              var pct = Math.round((g.score / g.max_score) * 100);
+              var div = document.createElement('div');
+              div.innerHTML = `
+            <div class="flex justify-between text-sm font-semibold mb-2"><span class="text-gray-600 truncate mr-4">${g.assignment_title}</span><span class="text-gray-900">${g.score}</span></div>
+            <div class="h-2 bg-gray-100 rounded-full overflow-hidden"><div class="h-full ${colors[i % colors.length]} rounded-full" style="width: ${pct}%"></div></div>
+          `;
+              gradeContainer.appendChild(div);
+            });
+          }
+
+          // Recent Activity
+          var activityContainer = document.querySelectorAll('.bg-white.p-8.rounded-3xl.card-shadow .space-y-6')[1];
+          if (activityContainer) {
+            activityContainer.innerHTML = '';
+            var recent = subRes.submissions.slice(0, 3);
+            if (recent.length === 0) activityContainer.innerHTML = '<p class="text-sm text-gray-500">No recent activity.</p>';
+            recent.forEach(s => {
+              var icon = s.status === 'graded' ? 'lucide:check' : 'lucide:send';
+              var bgClass = s.status === 'graded' ? 'bg-emerald-50 text-emerald-600' : 'bg-indigo-50 text-accent-purple';
+              var title = s.status === 'graded' ? 'Assignment Graded' : 'Assignment Submitted';
+              var desc = s.status === 'graded' ? `${s.assignment_title} was graded. You scored ${s.score}/${s.max_score}.` : `You successfully submitted ${s.assignment_title}.`;
+              var div = document.createElement('div');
+              div.className = 'flex gap-4';
+              div.innerHTML = `
+            <div class="w-10 h-10 ${bgClass} rounded-xl flex items-center justify-center shrink-0"><iconify-icon icon="${icon}" class="text-xl"></iconify-icon></div>
+            <div>
+              <p class="text-sm font-bold text-gray-900">${title}</p>
+              <p class="text-xs text-gray-500">${desc}</p>
+              <p class="text-[10px] text-gray-400 mt-1">${AHApi.timeAgo(s.submitted_at)}</p>
+            </div>
+          `;
+              activityContainer.appendChild(div);
+            });
+          }
+        }
+      } catch (e) { }
+
+      // Logout
+      var logoutLink = document.getElementById('nav-logout');
+      if (logoutLink) logoutLink.addEventListener('click', function (e) { e.preventDefault(); AHApi.Auth.logout(); });
+    });
+  </script>
+  <!-- Mobile Bottom Navigation -->
+  <div class="mobile-bottom-nav">
+    <a href="student-dashboard.html" class="nav-dashboard active">
+      <iconify-icon icon="lucide:layout-dashboard" class="text-xl"></iconify-icon>
+      <span>Home</span>
+    </a>
+    <a href="student-assignments.html" class="nav-assignments">
+      <iconify-icon icon="lucide:book-open" class="text-xl"></iconify-icon>
+      <span>Tasks</span>
+    </a>
+    <a href="student-submissions.html" class="nav-submissions">
+      <iconify-icon icon="lucide:send" class="text-xl"></iconify-icon>
+      <span>Submit</span>
+    </a>
+    <a href="student-notifications.html" class="nav-notifications">
+      <iconify-icon icon="lucide:bell" class="text-xl"></iconify-icon>
+      <span>Alerts</span>
+    </a>
+    <a href="student-settings.html" class="nav-settings">
+      <iconify-icon icon="lucide:settings" class="text-xl"></iconify-icon>
+      <span>Settings</span>
+    </a>
+  </div>
+</body>
+
+</html>

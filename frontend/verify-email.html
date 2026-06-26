@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify Email | AssignHub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif
+    }
+
+    .auth-gradient {
+      background: linear-gradient(135deg, #131432 0%, #5D5FEF 100%)
+    }
+
+    .form-shadow {
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04)
+    }
+
+    .accent-purple {
+      color: #5D5FEF
+    }
+
+    .bg-accent-purple {
+      background-color: #5D5FEF
+    }
+
+    .otp-input:focus {
+      border-color: #5D5FEF;
+      box-shadow: 0 0 0 4px rgba(93, 95, 239, 0.1)
+    }
+  </style>
+  <script src="/api.js"></script>
+
+  <style id="safe-mobile-fixes">
+    /* 2026 Mobile Enhancements */
+    @media (max-width: 768px) {
+
+      html,
+      body {
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+      }
+
+      aside.fixed {
+        display: none !important;
+      }
+
+      main,
+      .main-content {
+        margin-left: 0 !important;
+        padding: 16px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding-bottom: 80px !important;
+        /* Bottom nav space */
+      }
+
+      .card {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        margin-bottom: 20px !important;
+      }
+
+      table {
+        display: block !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        width: 100% !important;
+        -webkit-overflow-scrolling: touch !important;
+      }
+
+      input,
+      select,
+      textarea,
+      button,
+      .btn {
+        min-height: 48px !important;
+        font-size: 16px !important;
+      }
+
+      /* Mobile Bottom Navigation */
+      .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border-top: 1px solid #eaeaea;
+        justify-content: space-around;
+        padding: 10px 0;
+        z-index: 9999;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .mobile-bottom-nav a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #64748b;
+        text-decoration: none;
+        font-size: 12px;
+        gap: 4px;
+      }
+
+      .mobile-bottom-nav a.active {
+        color: #6366f1;
+      }
+    }
+
+    @media (min-width: 769px) {
+
+      .mobile-bottom-nav,
+      .mobile-top-bar {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="min-h-screen flex bg-gray-50">
+    <div
+      class="hidden lg:flex lg:w-1/2 auth-gradient relative overflow-hidden flex-col justify-center px-20 text-white">
+      <div class="absolute top-12 left-20 flex items-center gap-3">
+        <div
+          class="w-10 h-10 bg-white/10 backdrop-blur-md rounded-xl flex items-center justify-center border border-white/20">
+          <iconify-icon icon="lucide:graduation-cap" class="text-2xl text-white"></iconify-icon></div><span
+          class="text-2xl font-bold tracking-tight">AssignHub</span>
+      </div>
+      <div class="relative z-10">
+        <h1 class="text-5xl font-extrabold leading-tight mb-6">Security is Our<br />Top Priority.</h1>
+        <p class="text-xl text-white/70 max-w-md">Verification ensures your academic data remains private and your
+          account stays protected.</p>
+      </div>
+      <div
+        class="absolute bottom-20 left-20 right-20 flex items-center gap-6 p-6 bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10">
+        <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center"><iconify-icon
+            icon="lucide:shield-check" class="text-2xl text-white"></iconify-icon></div>
+        <p class="text-sm font-medium">Two-factor verification helps us verify that it's really you trying to access
+          your dashboard.</p>
+      </div>
+      <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+    </div>
+    <div class="w-full lg:w-1/2 flex items-center justify-center p-8 md:p-16">
+      <div class="w-full max-w-md">
+        <div class="mb-10 text-center lg:text-left">
+          <div class="lg:hidden flex items-center justify-center gap-2 mb-8"><iconify-icon icon="lucide:graduation-cap"
+              class="text-3xl accent-purple"></iconify-icon><span
+              class="text-2xl font-bold tracking-tight text-gray-900">AssignHub</span></div>
+          <div class="inline-flex items-center justify-center w-16 h-16 bg-indigo-50 rounded-2xl mb-6"><iconify-icon
+              icon="lucide:mail" class="text-3xl accent-purple"></iconify-icon></div>
+          <h2 class="text-3xl font-bold text-gray-900 mb-2">Check your email</h2>
+          <p class="text-gray-500">We've sent a 6-digit verification code to <span
+              class="font-semibold text-gray-900">student***@university.edu</span></p>
+        </div>
+        <form class="space-y-8">
+          <div class="flex justify-between gap-2" id="otp-container"><input type="text" maxlength="1"
+              class="otp-input w-12 h-14 md:w-14 md:h-16 text-center text-2xl font-bold bg-white border border-gray-200 rounded-2xl focus:outline-none transition-all text-gray-900"
+              autofocus><input type="text" maxlength="1"
+              class="otp-input w-12 h-14 md:w-14 md:h-16 text-center text-2xl font-bold bg-white border border-gray-200 rounded-2xl focus:outline-none transition-all text-gray-900"><input
+              type="text" maxlength="1"
+              class="otp-input w-12 h-14 md:w-14 md:h-16 text-center text-2xl font-bold bg-white border border-gray-200 rounded-2xl focus:outline-none transition-all text-gray-900"><input
+              type="text" maxlength="1"
+              class="otp-input w-12 h-14 md:w-14 md:h-16 text-center text-2xl font-bold bg-white border border-gray-200 rounded-2xl focus:outline-none transition-all text-gray-900"><input
+              type="text" maxlength="1"
+              class="otp-input w-12 h-14 md:w-14 md:h-16 text-center text-2xl font-bold bg-white border border-gray-200 rounded-2xl focus:outline-none transition-all text-gray-900"><input
+              type="text" maxlength="1"
+              class="otp-input w-12 h-14 md:w-14 md:h-16 text-center text-2xl font-bold bg-white border border-gray-200 rounded-2xl focus:outline-none transition-all text-gray-900">
+          </div>
+          <div class="space-y-4"><a href="student-dashboard.html" id="verify-btn"
+              class="w-full py-4 bg-accent-purple text-white font-bold rounded-2xl hover:opacity-90 shadow-xl shadow-indigo-200 active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-lg">Verify
+              Account</a>
+            <div class="text-center">
+              <p class="text-sm text-gray-500 mb-2">Didn't receive the code?</p><button type="button" id="resend-btn"
+                class="font-bold accent-purple hover:underline underline-offset-4 disabled:text-gray-400 disabled:no-underline">Resend
+                Code</button>
+              <p class="text-xs text-gray-400 mt-2 flex items-center justify-center gap-1"><iconify-icon
+                  icon="lucide:timer" class="text-sm"></iconify-icon>Code expires in <span class="font-semibold"
+                  id="timer">04:59</span></p>
+            </div>
+          </div>
+        </form>
+        <div class="mt-10 p-4 bg-blue-50/50 rounded-2xl border border-blue-100/50 flex items-start gap-3"><iconify-icon
+            icon="lucide:info" class="text-blue-500 mt-0.5 text-lg"></iconify-icon>
+          <p class="text-xs text-blue-700 leading-relaxed">If you don't see the email, please check your <span
+              class="font-bold">Junk or Spam folder</span>. The code will be valid for 10 minutes before expiring.</p>
+        </div>
+        <div class="mt-12 pt-8 border-t border-gray-100 flex flex-col items-center gap-4"><a href="login.html"
+            id="back-to-login"
+            class="text-sm font-semibold text-gray-500 hover:text-accent-purple transition-all flex items-center gap-2"><iconify-icon
+              icon="lucide:arrow-left"></iconify-icon>Back to Login</a>
+          <div class="flex items-center justify-center gap-6 text-xs text-gray-400 font-medium"><a href="#"
+              class="hover:text-gray-600 transition-colors">Contact Support</a><span
+              class="w-1 h-1 bg-gray-200 rounded-full"></span><a href="#"
+              class="hover:text-gray-600 transition-colors">Privacy Policy</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    /* AssignHub shared interaction logic */
+    (function () {
+
+      /* ── Toast notification ── */
+      function showToast(msg, type) {
+        var t = document.getElementById('ah-toast');
+        if (!t) {
+          t = document.createElement('div');
+          t.id = 'ah-toast';
+          t.style.cssText = 'position:fixed;bottom:28px;right:28px;z-index:9999;display:flex;align-items:center;gap:10px;padding:14px 22px;border-radius:16px;font-family:inherit;font-size:14px;font-weight:600;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,0.18);transition:opacity .3s,transform .3s;opacity:0;transform:translateY(12px);pointer-events:none;';
+          document.body.appendChild(t);
+        }
+        var icon = type === 'success' ? '✓' : type === 'error' ? '✕' : type === 'warn' ? '⚠' : 'ℹ';
+        var bg = type === 'success' ? '#22c55e' : type === 'error' ? '#ef4444' : type === 'warn' ? '#f59e0b' : '#5D5FEF';
+        t.style.background = bg;
+        t.innerHTML = '<span style="font-size:16px;">' + icon + '</span>' + msg;
+        t.style.opacity = '1'; t.style.transform = 'translateY(0)';
+        clearTimeout(t._timer);
+        t._timer = setTimeout(function () { t.style.opacity = '0'; t.style.transform = 'translateY(12px)'; }, 2800);
+      }
+
+      /* ── Simple confirm modal ── */
+      function showConfirm(title, msg, onYes) {
+        var old = document.getElementById('ah-modal'); if (old) old.remove();
+        var m = document.createElement('div');
+        m.id = 'ah-modal';
+        m.innerHTML = '<div style="position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:10000;display:flex;align-items:center;justify-content:center;">' +
+          '<div style="background:#fff;border-radius:24px;padding:36px 32px;width:360px;box-shadow:0 24px 80px rgba(0,0,0,.2);font-family:inherit;">' +
+          '<h3 style="margin:0 0 10px;font-size:18px;font-weight:800;color:#111;">' + title + '</h3>' +
+          '<p style="margin:0 0 28px;font-size:14px;color:#6b7280;">' + msg + '</p>' +
+          '<div style="display:flex;gap:10px;">' +
+          '<button id="ah-modal-cancel" style="flex:1;padding:12px;background:#f3f4f6;color:#374151;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;">Cancel</button>' +
+          '<button id="ah-modal-ok" style="flex:1;padding:12px;background:#5D5FEF;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;">Confirm</button>' +
+          '</div></div></div>';
+        document.body.appendChild(m);
+        document.getElementById('ah-modal-cancel').onclick = function () { m.remove(); };
+        document.getElementById('ah-modal-ok').onclick = function () { m.remove(); onYes(); };
+        m.firstElementChild.onclick = function (e) { if (e.target === this) m.remove(); };
+      }
+
+      /* expose globals */
+      window.AH = { showToast: showToast, showConfirm: showConfirm };
+    })();
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // OTP auto-advance
+      var inputs = document.querySelectorAll('.otp-input');
+      inputs.forEach(function (inp, i) {
+        inp.addEventListener('input', function () {
+          this.value = this.value.slice(-1);
+          if (this.value && i < inputs.length - 1) inputs[i + 1].focus();
+        });
+        inp.addEventListener('keydown', function (e) {
+          if (e.key === 'Backspace' && !this.value && i > 0) inputs[i - 1].focus();
+        });
+      });
+      // verify button
+      var verifyBtn = document.getElementById('verify-btn');
+      if (verifyBtn) {
+        verifyBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          var code = Array.from(inputs).map(function (i) { return i.value; }).join('');
+          if (code.length < 6) { AH.showToast('Please enter the complete 6-digit code', 'error'); return; }
+          window.location.href = 'student-dashboard.html';
+        });
+      }
+      // resend + countdown timer
+      var timerEl = document.getElementById('timer');
+      var resendBtn = document.getElementById('resend-btn');
+      var secs = 299;
+      function tick() {
+        var m = Math.floor(secs / 60), s = secs % 60;
+        if (timerEl) timerEl.textContent = ('0' + m).slice(-2) + ':' + ('0' + s).slice(-2);
+        if (secs > 0) { secs--; setTimeout(tick, 1000); }
+        else { if (resendBtn) resendBtn.disabled = false; }
+      }
+      tick();
+      if (resendBtn) {
+        resendBtn.disabled = true;
+        resendBtn.addEventListener('click', function () {
+          secs = 299; this.disabled = true; tick();
+          AH.showToast('Verification code resent!', 'success');
+        });
+      }
+    });
+
+
+    // Real API integration for verify-email
+    document.addEventListener('DOMContentLoaded', function () {
+      // Pre-fill from session if available
+      var devToken = sessionStorage.getItem('ah_dev_token');
+      if (devToken) {
+        var inputs = document.querySelectorAll('input[maxlength="1"], input[type="text"]');
+        if (inputs.length === 6) {
+          devToken.split('').forEach(function (c, i) { if (inputs[i]) inputs[i].value = c; });
+        }
+      }
+      var verifyBtn = document.querySelector('button[id="cta-verify"], button.bg-accent-purple, button.w-full.py-4');
+      if (verifyBtn) {
+        verifyBtn.addEventListener('click', async function () {
+          var identifier = sessionStorage.getItem('ah_reset_identifier');
+          if (!identifier) { AH.showToast('Session expired. Please start again.', 'error'); setTimeout(function () { window.location.href = 'forgot-password.html'; }, 1500); return; }
+          var inputs = document.querySelectorAll('input[maxlength="1"]');
+          var token = Array.from(inputs).map(function (i) { return i.value; }).join('');
+          if (token.length < 6) { AH.showToast('Please enter all 6 digits', 'error'); return; }
+          var res = await AHApi.AuthAPI.verifyResetToken(identifier, token);
+          if (!res.success) { AH.showToast(res.message || 'Invalid code', 'error'); return; }
+          sessionStorage.setItem('ah_reset_token', token);
+          AH.showToast('Code verified! Redirecting...', 'success');
+          // On reset page show new password form
+          setTimeout(function () { window.location.href = 'verify-email.html#reset'; }, 1000);
+        });
+      }
+    });
+  </script>
+  
+</body>
+
+</html>","title":"Verify Email | AssignHub","description":"A clean, centered email verification page for the
+authentication flow. Features a 6-digit OTP input grid, countdown timer, resend functionality, and supportive UI
+elements for checking spam. Consistent with the modern enterprise aesthetic and purple branding of
+AssignHub.","width":1440,"height":900}
