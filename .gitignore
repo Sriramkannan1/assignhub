@@ -1,0 +1,8 @@
+node_modules/
+.env
+backend/uploads/assignments/*
+backend/uploads/submissions/*
+!backend/uploads/assignments/.gitkeep
+!backend/uploads/submissions/.gitkeep
+*.log
+.DS_Store
